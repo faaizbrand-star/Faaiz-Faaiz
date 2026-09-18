@@ -15,14 +15,20 @@ import {
   Cpu, 
   BookOpen, 
   Minimize2, 
-  Maximize2 
+  Maximize2,
+  AlertTriangle,
+  Volume2,
+  VolumeX
 } from 'lucide-react';
 import { ChatMessage, ChatRoleType, TaskComplexity } from '../types';
+import { chatSound } from '../utils/audio';
 
 interface GeminiChatbotProps {
   isOpen: boolean;
   onClose: () => void;
   brandName?: string;
+  isSoundEnabled?: boolean;
+  onToggleSound?: () => void;
 }
 
 interface RoleConfig {
@@ -107,7 +113,13 @@ const SUGGESTED_PROMPTS: Record<ChatRoleType, string[]> = {
   ]
 };
 
-export const GeminiChatbot: React.FC<GeminiChatbotProps> = ({ isOpen, onClose, brandName = "Faaiz Durrani" }) => {
+export const GeminiChatbot: React.FC<GeminiChatbotProps> = ({ 
+  isOpen, 
+  onClose, 
+  brandName = "Faaiz Durrani",
+  isSoundEnabled = true,
+  onToggleSound
+}) => {
   const [selectedRole, setSelectedRole] = useState<ChatRoleType>('mentor');
   const [modelOverride, setModelOverride] = useState<string>('gemini-3.5-flash');
   const [showRoleSelector, setShowRoleSelector] = useState(false);
@@ -115,6 +127,18 @@ export const GeminiChatbot: React.FC<GeminiChatbotProps> = ({ isOpen, onClose, b
   const [customInstruction, setCustomInstruction] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
+
+  // Close confirmation modal on Escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showClearConfirm) {
+        setShowClearConfirm(false);
+      }
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [showClearConfirm]);
 
   // Initial greeting
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -165,6 +189,7 @@ export const GeminiChatbot: React.FC<GeminiChatbotProps> = ({ isOpen, onClose, b
         roleId: selectedRole
       }
     ]);
+    setShowClearConfirm(false);
   };
 
   const handleCopyMessage = (id: string, text: string) => {
@@ -188,6 +213,10 @@ export const GeminiChatbot: React.FC<GeminiChatbotProps> = ({ isOpen, onClose, b
     setMessages(newHistory);
     setInputPrompt('');
     setIsLoading(true);
+
+    if (isSoundEnabled) {
+      chatSound.playPing('send');
+    }
 
     try {
       const response = await fetch('/api/chat', {
@@ -219,6 +248,9 @@ export const GeminiChatbot: React.FC<GeminiChatbotProps> = ({ isOpen, onClose, b
           isFallback: data.isFallback
         };
         setMessages(prev => [...prev, botMessage]);
+        if (isSoundEnabled) {
+          chatSound.playPing('receive');
+        }
       } else {
         throw new Error(data.error || 'Empty response received from AI');
       }
@@ -236,6 +268,9 @@ export const GeminiChatbot: React.FC<GeminiChatbotProps> = ({ isOpen, onClose, b
         isFallback: true
       };
       setMessages(prev => [...prev, fallbackMessage]);
+      if (isSoundEnabled) {
+        chatSound.playPing('receive');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -262,6 +297,66 @@ export const GeminiChatbot: React.FC<GeminiChatbotProps> = ({ isOpen, onClose, b
             : 'h-[85vh] sm:h-[650px] max-w-xl sm:rounded-2xl'
         }`}
       >
+        {/* Clear Chat Confirmation Modal */}
+        {showClearConfirm && (
+          <div 
+            className="absolute inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setShowClearConfirm(false);
+            }}
+          >
+            <div 
+              role="alertdialog"
+              aria-labelledby="clear-chat-title"
+              aria-describedby="clear-chat-description"
+              className="bg-[#0a231d] border border-red-500/40 rounded-2xl p-5 max-w-sm w-full shadow-[0_20px_50px_rgba(0,0,0,0.9)] space-y-4 text-center ring-1 ring-red-500/20"
+            >
+              <div className="w-12 h-12 rounded-full bg-red-950/80 border border-red-500/40 flex items-center justify-center mx-auto text-red-400 shadow-inner">
+                <AlertTriangle className="w-6 h-6" />
+              </div>
+
+              <div className="space-y-1.5">
+                <h4 id="clear-chat-title" className="font-syne font-bold text-white text-base tracking-tight">
+                  Clear Conversation?
+                </h4>
+                <p id="clear-chat-description" className="text-gray-300 text-xs leading-relaxed font-inter">
+                  Are you sure you want to wipe the active conversation history with{' '}
+                  <strong className="text-[#F2D231]">{currentRole.name}</strong>?
+                  {messages.length > 1 ? (
+                    <span className="block text-gray-400 text-[11px] mt-1.5 font-spacemono">
+                      {messages.length} messages in this active thread will be wiped.
+                    </span>
+                  ) : (
+                    <span className="block text-gray-400 text-[11px] mt-1.5 font-spacemono">
+                      This will reset the chat session to its initial state.
+                    </span>
+                  )}
+                </p>
+              </div>
+
+              <div className="flex gap-2.5 pt-1">
+                <button
+                  type="button"
+                  id="cancel-clear-chat-btn"
+                  onClick={() => setShowClearConfirm(false)}
+                  className="flex-1 py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border border-white/10 text-xs font-spacemono transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  id="confirm-clear-chat-btn"
+                  onClick={handleClearHistory}
+                  className="flex-1 py-2 px-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-spacemono font-bold text-xs transition-all shadow-lg shadow-red-950/50 hover:shadow-red-600/40 cursor-pointer flex items-center justify-center gap-1.5 active:scale-98"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Yes, Clear Chat</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Chat Header */}
         <div className="flex items-center justify-between px-4 py-3 bg-[#123D32] border-b border-[#F2D231]/20">
           <div className="flex items-center gap-3">
@@ -299,12 +394,35 @@ export const GeminiChatbot: React.FC<GeminiChatbotProps> = ({ isOpen, onClose, b
 
             <button
               id="chat-clear-history"
-              onClick={handleClearHistory}
+              type="button"
+              onClick={() => setShowClearConfirm(true)}
               title="Clear conversation history"
-              className="p-1.5 rounded-lg text-gray-400 hover:text-red-400 hover:bg-white/5 transition-colors"
+              className="p-1.5 sm:px-2.5 sm:py-1 rounded-lg text-xs font-spacemono flex items-center gap-1.5 text-gray-400 hover:text-red-400 hover:bg-red-950/40 border border-transparent hover:border-red-500/30 transition-all cursor-pointer"
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="w-3.5 h-3.5 text-red-400/80" />
+              <span className="hidden sm:inline">Clear Chat</span>
             </button>
+
+            {onToggleSound && (
+              <button
+                id="chat-header-sound-toggle"
+                type="button"
+                onClick={onToggleSound}
+                title={isSoundEnabled ? "Mute notification sounds" : "Unmute notification sounds"}
+                aria-label={isSoundEnabled ? "Mute chat sounds" : "Unmute chat sounds"}
+                className={`p-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
+                  isSoundEnabled 
+                    ? 'text-[#F2D231] hover:text-[#FFE873] hover:bg-white/5' 
+                    : 'text-gray-500 hover:text-gray-300 hover:bg-white/5'
+                }`}
+              >
+                {isSoundEnabled ? (
+                  <Volume2 className="w-4 h-4" />
+                ) : (
+                  <VolumeX className="w-4 h-4" />
+                )}
+              </button>
+            )}
 
             <button
               id="chat-expand-toggle"

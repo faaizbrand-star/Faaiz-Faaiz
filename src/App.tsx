@@ -16,7 +16,8 @@ import { ApplicationModal } from './components/ApplicationModal';
 import { GeminiChatbot } from './components/GeminiChatbot';
 import { AdminLogin } from './components/admin/AdminLogin';
 import { AdminDashboard } from './components/admin/AdminDashboard';
-import { Lock, Bot } from 'lucide-react';
+import { Lock, Bot, Volume2, VolumeX } from 'lucide-react';
+import { chatSound } from './utils/audio';
 
 export default function App() {
   const [content, setContent] = useState<SiteContent>(initialSiteContent);
@@ -28,6 +29,30 @@ export default function App() {
   const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [selectedPlanTier, setSelectedPlanTier] = useState('Core Foundation');
+  const [isSoundEnabled, setIsSoundEnabled] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('faaiz_chat_sound_enabled');
+      return saved !== null ? saved === 'true' : true;
+    } catch {
+      return true;
+    }
+  });
+
+  const handleToggleSound = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setIsSoundEnabled(prev => {
+      const next = !prev;
+      try {
+        localStorage.setItem('faaiz_chat_sound_enabled', String(next));
+      } catch (err) {
+        console.warn('Could not persist sound preference:', err);
+      }
+      if (next) {
+        chatSound.playPing('toggle');
+      }
+      return next;
+    });
+  };
 
   // Detect route on initial load and handle popstate
   useEffect(() => {
@@ -273,6 +298,8 @@ export default function App() {
         isOpen={isChatOpen}
         onClose={() => setIsChatOpen(false)}
         brandName={content.siteConfig.brandName}
+        isSoundEnabled={isSoundEnabled}
+        onToggleSound={handleToggleSound}
       />
 
       {/* Cohort Application / Contact Modal */}
@@ -283,8 +310,11 @@ export default function App() {
         brandName={content.siteConfig.brandName}
       />
 
-      {/* Floating Gemini Chat Launcher Button */}
-      <div className="fixed bottom-4 right-16 sm:right-20 z-30">
+      {/* Floating Gemini Chat Launcher & Audio Toggle Container */}
+      <div 
+        id="floating-chat-launcher-container"
+        className="fixed bottom-4 right-16 sm:right-20 z-30 flex items-center gap-1.5"
+      >
         <button
           id="floating-gemini-chat-btn"
           onClick={() => setIsChatOpen(true)}
@@ -295,6 +325,26 @@ export default function App() {
           <Bot className="w-4 h-4 text-[#123D32] group-hover:scale-110 transition-transform" />
           <span className="hidden sm:inline">Ask Faaiz AI</span>
           <span className="w-2 h-2 rounded-full bg-emerald-700 animate-pulse" />
+        </button>
+
+        {/* Subtle Mute / Unmute Sound Effects Toggle */}
+        <button
+          id="chat-sound-toggle-btn"
+          type="button"
+          onClick={handleToggleSound}
+          className={`p-2 rounded-full border backdrop-blur-md shadow-[0_4px_15px_rgba(0,0,0,0.3)] transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center ${
+            isSoundEnabled
+              ? 'bg-[#123D32]/90 hover:bg-[#194C3D] text-[#F2D231] border-[#F2D231]/40 hover:border-[#F2D231]'
+              : 'bg-[#0a231d]/90 hover:bg-[#123D32] text-gray-400 hover:text-gray-200 border-white/15 hover:border-white/30'
+          }`}
+          title={isSoundEnabled ? "Mute chat notification pings" : "Unmute chat notification pings"}
+          aria-label={isSoundEnabled ? "Mute chat sound effects" : "Unmute chat sound effects"}
+        >
+          {isSoundEnabled ? (
+            <Volume2 className="w-3.5 h-3.5" />
+          ) : (
+            <VolumeX className="w-3.5 h-3.5" />
+          )}
         </button>
       </div>
 
