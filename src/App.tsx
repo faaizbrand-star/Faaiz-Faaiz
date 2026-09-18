@@ -28,6 +28,7 @@ export default function App() {
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [hasUnreadAnalysis, setHasUnreadAnalysis] = useState<boolean>(true);
   const [selectedPlanTier, setSelectedPlanTier] = useState('Core Foundation');
   const [isSoundEnabled, setIsSoundEnabled] = useState<boolean>(() => {
     try {
@@ -37,6 +38,11 @@ export default function App() {
       return true;
     }
   });
+
+  const handleOpenChat = () => {
+    setIsChatOpen(true);
+    setHasUnreadAnalysis(false);
+  };
 
   const handleToggleSound = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
@@ -145,6 +151,15 @@ export default function App() {
     const interval = setInterval(fetchTicker, 8000);
     return () => clearInterval(interval);
   }, []);
+
+  // Re-arm unread analysis update indicator periodically when chat is closed
+  useEffect(() => {
+    if (isChatOpen) return;
+    const timer = setTimeout(() => {
+      setHasUnreadAnalysis(true);
+    }, 45000);
+    return () => clearTimeout(timer);
+  }, [isChatOpen]);
 
   // Active section scroll spy
   useEffect(() => {
@@ -317,14 +332,36 @@ export default function App() {
       >
         <button
           id="floating-gemini-chat-btn"
-          onClick={() => setIsChatOpen(true)}
-          className="group flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#F2D231] hover:bg-[#FFE873] active:bg-[#D4B22A] text-[#123D32] font-syne font-bold text-xs uppercase tracking-wider shadow-[0_8px_25px_rgba(242,210,49,0.4)] border border-white/40 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
-          title="Ask Faaiz AI Market Assistant"
-          aria-label="Open Gemini AI Assistant"
+          onClick={handleOpenChat}
+          className={`relative group flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#F2D231] hover:bg-[#FFE873] active:bg-[#D4B22A] text-[#123D32] font-syne font-bold text-xs uppercase tracking-wider cursor-pointer border transition-all duration-300 ease-out hover:scale-105 active:scale-95 ${
+            hasUnreadAnalysis && !isChatOpen
+              ? 'animate-[pulse_2.2s_cubic-bezier(0.4,0,0.6,1)_infinite] ring-2 ring-[#F2D231]/60 ring-offset-2 ring-offset-[#071f19] shadow-[0_0_22px_rgba(242,210,49,0.55)] border-white/80 opacity-100 hover:border-white hover:opacity-100'
+              : 'border-white/30 hover:border-white opacity-90 hover:opacity-100 shadow-[0_8px_25px_rgba(242,210,49,0.35)] hover:shadow-[0_10px_30px_rgba(242,210,49,0.55)]'
+          }`}
+          title={hasUnreadAnalysis && !isChatOpen ? "Ask Faaiz AI (New analysis update available)" : "Ask Faaiz AI Market Assistant"}
+          aria-label={hasUnreadAnalysis && !isChatOpen ? "Ask Faaiz AI - New analysis update available" : "Open Gemini AI Assistant"}
         >
-          <Bot className="w-4 h-4 text-[#123D32] group-hover:scale-110 transition-transform" />
+          {/* Subtle pulse radar badge when unread or pending analysis update exists */}
+          {hasUnreadAnalysis && !isChatOpen && (
+            <span 
+              id="unread-analysis-pulse-badge"
+              className="absolute -top-1 -right-1 flex h-2.5 w-2.5 pointer-events-none"
+              title="Pending analysis update"
+            >
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#F2D231] opacity-80" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#F2D231] border border-[#0d2e26]" />
+            </span>
+          )}
+
+          <Bot className="w-4 h-4 text-[#123D32] group-hover:scale-110 transition-transform duration-200" />
           <span className="hidden sm:inline">Ask Faaiz AI</span>
-          <span className="w-2 h-2 rounded-full bg-emerald-700 animate-pulse" />
+          <span 
+            className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+              hasUnreadAnalysis && !isChatOpen 
+                ? 'bg-emerald-600 animate-ping' 
+                : 'bg-emerald-700 animate-pulse'
+            }`} 
+          />
         </button>
 
         {/* Subtle Mute / Unmute Sound Effects Toggle */}
@@ -332,10 +369,10 @@ export default function App() {
           id="chat-sound-toggle-btn"
           type="button"
           onClick={handleToggleSound}
-          className={`p-2 rounded-full border backdrop-blur-md shadow-[0_4px_15px_rgba(0,0,0,0.3)] transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center ${
+          className={`p-2 rounded-full border backdrop-blur-md shadow-[0_4px_15px_rgba(0,0,0,0.3)] cursor-pointer flex items-center justify-center transition-all duration-300 ease-out hover:scale-105 active:scale-95 ${
             isSoundEnabled
-              ? 'bg-[#123D32]/90 hover:bg-[#194C3D] text-[#F2D231] border-[#F2D231]/40 hover:border-[#F2D231]'
-              : 'bg-[#0a231d]/90 hover:bg-[#123D32] text-gray-400 hover:text-gray-200 border-white/15 hover:border-white/30'
+              ? 'bg-[#123D32]/90 hover:bg-[#194C3D] text-[#F2D231] border-[#F2D231]/40 hover:border-[#F2D231] opacity-85 hover:opacity-100 shadow-[0_0_12px_rgba(242,210,49,0.15)]'
+              : 'bg-[#0a231d]/90 hover:bg-[#123D32] text-gray-400 hover:text-gray-200 border-white/15 hover:border-[#F2D231]/60 opacity-75 hover:opacity-100'
           }`}
           title={isSoundEnabled ? "Mute chat notification pings" : "Unmute chat notification pings"}
           aria-label={isSoundEnabled ? "Mute chat sound effects" : "Unmute chat sound effects"}

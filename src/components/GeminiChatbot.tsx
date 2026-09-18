@@ -18,10 +18,14 @@ import {
   Maximize2,
   AlertTriangle,
   Volume2,
-  VolumeX
+  VolumeX,
+  TrendingUp,
+  TrendingDown,
+  Minus
 } from 'lucide-react';
 import { ChatMessage, ChatRoleType, TaskComplexity } from '../types';
 import { chatSound } from '../utils/audio';
+import { MarkdownRenderer } from './MarkdownRenderer';
 
 interface GeminiChatbotProps {
   isOpen: boolean;
@@ -540,6 +544,7 @@ export const GeminiChatbot: React.FC<GeminiChatbotProps> = ({
           {messages.map((msg) => {
             const isUser = msg.role === 'user';
             const isCopied = copiedId === msg.id;
+            const sentiment = !isUser ? detectMarketSentiment(msg.text) : null;
 
             return (
               <div 
@@ -561,9 +566,29 @@ export const GeminiChatbot: React.FC<GeminiChatbotProps> = ({
                 >
                   {/* Message Meta / Role Tag */}
                   <div className="flex items-center justify-between gap-2 mb-1.5">
-                    <span className="text-[10px] font-spacemono font-bold tracking-wide uppercase text-[#F2D231]">
-                      {isUser ? 'You' : `${brandName} AI`}
-                    </span>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-[10px] font-spacemono font-bold tracking-wide uppercase text-[#F2D231]">
+                        {isUser ? 'You' : `${brandName} AI`}
+                      </span>
+                      {!isUser && sentiment && (
+                        <span
+                          id={`sentiment-badge-${msg.id}`}
+                          className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-spacemono font-bold tracking-wide border transition-all ${
+                            sentiment === 'Bullish'
+                              ? 'bg-emerald-950/80 text-emerald-400 border-emerald-500/40 shadow-[0_0_8px_rgba(16,185,129,0.15)]'
+                              : sentiment === 'Bearish'
+                              ? 'bg-red-950/80 text-red-400 border-red-500/40 shadow-[0_0_8px_rgba(239,68,68,0.15)]'
+                              : 'bg-zinc-800/80 text-zinc-300 border-zinc-500/30'
+                          }`}
+                          title={`Market Sentiment: ${sentiment}`}
+                        >
+                          {sentiment === 'Bullish' && <TrendingUp className="w-2.5 h-2.5 text-emerald-400" />}
+                          {sentiment === 'Bearish' && <TrendingDown className="w-2.5 h-2.5 text-red-400" />}
+                          {sentiment === 'Neutral' && <Minus className="w-2.5 h-2.5 text-zinc-400" />}
+                          <span>{sentiment}</span>
+                        </span>
+                      )}
+                    </div>
                     <div className="flex items-center gap-1.5 opacity-70">
                       {!isUser && msg.modelUsed && (
                         <span className="text-[9px] font-spacemono px-1 rounded bg-black/40 text-gray-400">
@@ -582,8 +607,8 @@ export const GeminiChatbot: React.FC<GeminiChatbotProps> = ({
                   </div>
 
                   {/* Message Content */}
-                  <div className="whitespace-pre-wrap text-[13px] sm:text-sm text-gray-100 space-y-2 leading-relaxed font-inter">
-                    {formatMessageText(msg.text)}
+                  <div className="text-[13px] sm:text-sm text-gray-100 leading-relaxed font-inter">
+                    <MarkdownRenderer content={msg.text} />
                   </div>
 
                   {msg.isFallback && (
@@ -687,49 +712,6 @@ export const GeminiChatbot: React.FC<GeminiChatbotProps> = ({
   );
 };
 
-// Helper: Format message markdown formatting (bold, lists, code)
-function formatMessageText(text: string) {
-  const lines = text.split('\n');
-  return lines.map((line, idx) => {
-    // Check for headers
-    if (line.startsWith('### ')) {
-      return <h4 key={idx} className="font-bold text-[#F2D231] text-sm mt-2">{line.replace('### ', '')}</h4>;
-    }
-    if (line.startsWith('## ')) {
-      return <h3 key={idx} className="font-bold text-white text-base mt-2">{line.replace('## ', '')}</h3>;
-    }
-    // Check for bullet lists
-    if (line.trim().startsWith('- ') || line.trim().startsWith('* ')) {
-      const clean = line.trim().substring(2);
-      return (
-        <div key={idx} className="flex items-start gap-1.5 ml-2">
-          <span className="text-[#F2D231] font-bold">•</span>
-          <span>{renderFormattedInline(clean)}</span>
-        </div>
-      );
-    }
-    return <p key={idx} className="min-h-[1em]">{renderFormattedInline(line)}</p>;
-  });
-}
-
-function renderFormattedInline(str: string) {
-  // Regex for bold **text** and code `code`
-  const parts = str.split(/(\*\*.*?\*\*|`.*?`)/g);
-  return parts.map((part, i) => {
-    if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={i} className="font-bold text-white text-[#F2D231]">{part.slice(2, -2)}</strong>;
-    }
-    if (part.startsWith('`') && part.endsWith('`')) {
-      return (
-        <code key={i} className="px-1 py-0.5 rounded bg-black/50 text-[#F2D231] font-mono text-[11px] border border-white/10">
-          {part.slice(1, -1)}
-        </code>
-      );
-    }
-    return part;
-  });
-}
-
 // Fallback generator for static environments (GitHub Pages)
 function generateStaticFallback(query: string, role: ChatRoleType, brandName: string): string {
   const lower = query.toLowerCase();
@@ -762,3 +744,83 @@ Thank you for your question regarding "${query}".
 - **Patience over Action**: Wait for the market to sweep historical liquidity levels before placing bids.
 - **Zero Hype**: No overnight millionaire schemes. Consistent 2-5% monthly compounding on real capital beats gambling every single time.`;
 }
+
+export type MarketSentiment = 'Bullish' | 'Bearish' | 'Neutral';
+
+const BULLISH_KEYWORDS = [
+  'bullish',
+  'uptrend',
+  'breakout',
+  'rally',
+  'long position',
+  'accumulation',
+  'higher high',
+  'surge',
+  'gains',
+  'gain',
+  'support holds',
+  'rebound',
+  'upside',
+  'bull run',
+  'outperform',
+  'green candle',
+  'pumping',
+  'positive momentum',
+  'bulls in control',
+  'buying pressure',
+  'accumulate',
+  'higher low'
+];
+
+const BEARISH_KEYWORDS = [
+  'bearish',
+  'downtrend',
+  'breakdown',
+  'drop',
+  'dump',
+  'short position',
+  'distribution',
+  'lower low',
+  'crash',
+  'plunge',
+  'resistance rejects',
+  'downside',
+  'liquidation',
+  'bear market',
+  'bleed',
+  'red candle',
+  'negative momentum',
+  'bears in control',
+  'selling pressure',
+  'invalidation',
+  'lower high'
+];
+
+export function detectMarketSentiment(text: string): MarketSentiment {
+  if (!text) return 'Neutral';
+  const lower = text.toLowerCase();
+
+  let bullScore = 0;
+  let bearScore = 0;
+
+  for (const word of BULLISH_KEYWORDS) {
+    let index = 0;
+    while ((index = lower.indexOf(word, index)) !== -1) {
+      bullScore++;
+      index += word.length;
+    }
+  }
+
+  for (const word of BEARISH_KEYWORDS) {
+    let index = 0;
+    while ((index = lower.indexOf(word, index)) !== -1) {
+      bearScore++;
+      index += word.length;
+    }
+  }
+
+  if (bullScore > bearScore && bullScore > 0) return 'Bullish';
+  if (bearScore > bullScore && bearScore > 0) return 'Bearish';
+  return 'Neutral';
+}
+
