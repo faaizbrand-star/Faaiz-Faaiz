@@ -333,10 +333,10 @@ export default function App() {
         <button
           id="floating-gemini-chat-btn"
           onClick={handleOpenChat}
-          className={`relative group flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#F2D231] hover:bg-[#FFE873] active:bg-[#D4B22A] text-[#123D32] font-syne font-bold text-xs uppercase tracking-wider cursor-pointer border transition-all duration-300 ease-out hover:scale-105 active:scale-95 ${
+          className={`relative group flex items-center gap-2 px-3.5 py-2 rounded-full bg-amber-400 hover:bg-amber-300 active:bg-amber-500 text-slate-950 dark:bg-[#F2D231] dark:hover:bg-[#FFE873] dark:active:bg-[#D4B22A] dark:text-[#123D32] font-syne font-bold text-xs uppercase tracking-wider cursor-pointer border transition-[opacity,border-color,transform,box-shadow] duration-300 ease-in-out hover:scale-105 active:scale-95 ${
             hasUnreadAnalysis && !isChatOpen
-              ? 'animate-[pulse_2.2s_cubic-bezier(0.4,0,0.6,1)_infinite] ring-2 ring-[#F2D231]/60 ring-offset-2 ring-offset-[#071f19] shadow-[0_0_22px_rgba(242,210,49,0.55)] border-white/80 opacity-100 hover:border-white hover:opacity-100'
-              : 'border-white/30 hover:border-white opacity-90 hover:opacity-100 shadow-[0_8px_25px_rgba(242,210,49,0.35)] hover:shadow-[0_10px_30px_rgba(242,210,49,0.55)]'
+              ? 'animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite] ring-2 ring-amber-400/70 dark:ring-[#F2D231]/60 ring-offset-2 ring-offset-white dark:ring-offset-[#071f19] shadow-[0_0_24px_rgba(242,210,49,0.55)] border-amber-600 dark:border-white/80 opacity-90 hover:opacity-100 hover:border-slate-900 dark:hover:border-white'
+              : 'border-amber-500/50 hover:border-slate-900 dark:border-white/30 dark:hover:border-white opacity-85 hover:opacity-100 shadow-[0_8px_25px_rgba(242,210,49,0.3)] hover:shadow-[0_10px_30px_rgba(242,210,49,0.55)]'
           }`}
           title={hasUnreadAnalysis && !isChatOpen ? "Ask Faaiz AI (New analysis update available)" : "Ask Faaiz AI Market Assistant"}
           aria-label={hasUnreadAnalysis && !isChatOpen ? "Ask Faaiz AI - New analysis update available" : "Open Gemini AI Assistant"}
@@ -345,21 +345,21 @@ export default function App() {
           {hasUnreadAnalysis && !isChatOpen && (
             <span 
               id="unread-analysis-pulse-badge"
-              className="absolute -top-1 -right-1 flex h-2.5 w-2.5 pointer-events-none"
+              className="absolute -top-1 -right-1 flex h-3 w-3 pointer-events-none"
               title="Pending analysis update"
             >
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#F2D231] opacity-80" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#F2D231] border border-[#0d2e26]" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-500 dark:bg-[#F2D231] opacity-75" />
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-400 dark:bg-[#F2D231] border-2 border-white dark:border-[#0d2e26]" />
             </span>
           )}
 
-          <Bot className="w-4 h-4 text-[#123D32] group-hover:scale-110 transition-transform duration-200" />
+          <Bot className="w-4 h-4 text-slate-950 dark:text-[#123D32] group-hover:scale-110 transition-transform duration-200" />
           <span className="hidden sm:inline">Ask Faaiz AI</span>
           <span 
             className={`w-2 h-2 rounded-full transition-colors duration-300 ${
               hasUnreadAnalysis && !isChatOpen 
                 ? 'bg-emerald-600 animate-ping' 
-                : 'bg-emerald-700 animate-pulse'
+                : 'bg-emerald-600 dark:bg-emerald-700 animate-pulse'
             }`} 
           />
         </button>
@@ -369,10 +369,10 @@ export default function App() {
           id="chat-sound-toggle-btn"
           type="button"
           onClick={handleToggleSound}
-          className={`p-2 rounded-full border backdrop-blur-md shadow-[0_4px_15px_rgba(0,0,0,0.3)] cursor-pointer flex items-center justify-center transition-all duration-300 ease-out hover:scale-105 active:scale-95 ${
+          className={`p-2 rounded-full border backdrop-blur-md shadow-[0_4px_15px_rgba(0,0,0,0.2)] cursor-pointer flex items-center justify-center transition-[opacity,border-color,transform,box-shadow] duration-300 ease-in-out hover:scale-105 active:scale-95 ${
             isSoundEnabled
-              ? 'bg-[#123D32]/90 hover:bg-[#194C3D] text-[#F2D231] border-[#F2D231]/40 hover:border-[#F2D231] opacity-85 hover:opacity-100 shadow-[0_0_12px_rgba(242,210,49,0.15)]'
-              : 'bg-[#0a231d]/90 hover:bg-[#123D32] text-gray-400 hover:text-gray-200 border-white/15 hover:border-[#F2D231]/60 opacity-75 hover:opacity-100'
+              ? 'bg-slate-100 hover:bg-slate-200 text-amber-700 border-amber-300 hover:border-amber-500 dark:bg-[#123D32]/90 dark:hover:bg-[#194C3D] dark:text-[#F2D231] dark:border-[#F2D231]/40 dark:hover:border-[#F2D231] opacity-80 hover:opacity-100 shadow-[0_0_12px_rgba(242,210,49,0.15)]'
+              : 'bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 border-slate-300 hover:border-slate-500 dark:bg-[#0a231d]/90 dark:hover:bg-[#123D32] dark:text-gray-400 dark:hover:text-gray-200 dark:border-white/15 dark:hover:border-[#F2D231]/60 opacity-70 hover:opacity-100'
           }`}
           title={isSoundEnabled ? "Mute chat notification pings" : "Unmute chat notification pings"}
           aria-label={isSoundEnabled ? "Mute chat sound effects" : "Unmute chat sound effects"}

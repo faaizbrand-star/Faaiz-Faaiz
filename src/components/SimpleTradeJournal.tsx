@@ -200,21 +200,21 @@ Please review this trade execution through ${brandName}'s trading psychology and
   const disciplineScore = totalTrades > 0 ? Math.round((disciplinedTrades / totalTrades) * 100) : 0;
 
   return (
-    <div className="bg-[#0d2e26] border border-[#F2D231]/30 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col h-[680px]">
+    <div className="bg-white dark:bg-[#0d2e26] border border-slate-300 dark:border-[#F2D231]/30 rounded-2xl shadow-[0_20px_50px_rgba(15,23,42,0.12)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col h-[680px]">
       {/* Header */}
-      <div className="bg-[#123D32] border-b border-[#F2D231]/20 px-4 py-3 flex items-center justify-between">
+      <div className="bg-slate-100 dark:bg-[#123D32] border-b border-slate-200 dark:border-[#F2D231]/20 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[#F2D231]/15 border border-[#F2D231]/30 flex items-center justify-center text-[#F2D231]">
+          <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-[#F2D231]/15 border border-amber-300 dark:border-[#F2D231]/30 flex items-center justify-center text-amber-800 dark:text-[#F2D231]">
             <BookOpen className="w-4 h-4" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-syne font-bold text-white text-sm">Simple Trade Journal</span>
-              <span className="text-[10px] font-spacemono uppercase px-1.5 py-0.5 rounded bg-[#F2D231]/15 text-[#F2D231] border border-[#F2D231]/30">
+              <span className="font-syne font-bold text-slate-900 dark:text-white text-sm">Simple Trade Journal</span>
+              <span className="text-[10px] font-spacemono uppercase px-1.5 py-0.5 rounded bg-slate-200 dark:bg-[#F2D231]/15 text-slate-800 dark:text-[#F2D231] border border-slate-300 dark:border-[#F2D231]/30 font-semibold">
                 Local Storage
               </span>
             </div>
-            <p className="text-[11px] text-gray-400 font-inter">
+            <p className="text-[11px] text-slate-500 dark:text-gray-400 font-inter">
               Log execution discipline, setup patterns &amp; mental state
             </p>
           </div>
@@ -227,7 +227,7 @@ Please review this trade execution through ${brandName}'s trading psychology and
             onClick={() => setShowForm(!showForm)}
             className={`px-2.5 py-1.5 rounded-lg text-xs font-spacemono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
               showForm 
-                ? 'bg-[#071914] text-gray-300 border border-white/20' 
+                ? 'bg-slate-200 text-slate-800 border border-slate-300 dark:bg-[#071914] dark:text-gray-300 dark:border-white/20' 
                 : 'bg-[#F2D231] hover:bg-[#ffe14d] text-black shadow-[0_0_10px_rgba(242,210,49,0.2)]'
             }`}
           >
@@ -238,16 +238,16 @@ Please review this trade execution through ${brandName}'s trading psychology and
       </div>
 
       {/* Stats Summary Bar */}
-      <div className="bg-[#09221b] border-b border-white/5 px-4 py-2 flex items-center justify-between text-xs">
+      <div className="bg-slate-50 dark:bg-[#09221b] border-b border-slate-200 dark:border-white/5 px-4 py-2 flex items-center justify-between text-xs">
         <div className="flex items-center gap-4 text-[11px] font-spacemono">
-          <span className="text-gray-400">
-            Total: <strong className="text-white">{totalTrades}</strong>
+          <span className="text-slate-600 dark:text-gray-400">
+            Total: <strong className="text-slate-900 dark:text-white">{totalTrades}</strong>
           </span>
-          <span className="text-gray-400">
-            Win Rate: <strong className={winRate >= 50 ? 'text-emerald-400' : 'text-amber-400'}>{winRate}%</strong>
+          <span className="text-slate-600 dark:text-gray-400">
+            Win Rate: <strong className={winRate >= 50 ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}>{winRate}%</strong>
           </span>
-          <span className="text-gray-400 hidden sm:inline">
-            Discipline: <strong className="text-[#F2D231]">{disciplineScore}%</strong>
+          <span className="text-slate-600 dark:text-gray-400 hidden sm:inline">
+            Discipline: <strong className="text-amber-700 dark:text-[#F2D231]">{disciplineScore}%</strong>
           </span>
         </div>
 
@@ -258,7 +258,7 @@ Please review this trade execution through ${brandName}'s trading psychology and
                 type="button"
                 onClick={handleExportJson}
                 title="Export Journal as JSON"
-                className="p-1 rounded text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+                className="p-1 rounded text-slate-500 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/5 transition-colors cursor-pointer"
               >
                 <Download className="w-3.5 h-3.5" />
               </button>
@@ -266,7 +266,7 @@ Please review this trade execution through ${brandName}'s trading psychology and
                 type="button"
                 onClick={handleClearAll}
                 title="Clear all session entries"
-                className="p-1 rounded text-gray-400 hover:text-red-400 hover:bg-white/5 transition-colors"
+                className="p-1 rounded text-slate-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 hover:bg-slate-200 dark:hover:bg-white/5 transition-colors cursor-pointer"
               >
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
@@ -276,7 +276,7 @@ Please review this trade execution through ${brandName}'s trading psychology and
       </div>
 
       {/* Main Body: Toggle between New Log Form and Logs Feed */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 font-inter text-xs scrollbar-thin scrollbar-thumb-[#F2D231]/20 scrollbar-track-transparent">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 font-inter text-xs scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-[#F2D231]/20 scrollbar-track-transparent bg-slate-50/50 dark:bg-transparent">
         <AnimatePresence mode="wait">
           {showForm ? (
             /* Entry Form */
@@ -289,29 +289,29 @@ Please review this trade execution through ${brandName}'s trading psychology and
               onSubmit={handleSubmit}
               className="space-y-3.5"
             >
-              <div className="flex items-center justify-between pb-1 border-b border-white/10">
-                <span className="font-spacemono uppercase tracking-wider text-[#F2D231] font-bold text-[11px]">
+              <div className="flex items-center justify-between pb-1 border-b border-slate-200 dark:border-white/10">
+                <span className="font-spacemono uppercase tracking-wider text-amber-800 dark:text-[#F2D231] font-bold text-[11px]">
                   Record Trade Execution
                 </span>
-                <span className="text-[10px] text-gray-400 font-spacemono">
+                <span className="text-[10px] text-slate-500 dark:text-gray-400 font-spacemono">
                   Saved instantly to your browser
                 </span>
               </div>
 
               {/* Symbol & Direction */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="bg-[#071914] border border-white/10 rounded-xl p-3">
+                <div className="bg-white dark:bg-[#071914] border border-slate-200 dark:border-white/10 rounded-xl p-3 shadow-sm">
                   <div className="flex items-center justify-between mb-1.5">
-                    <label htmlFor={symbolInputId} className="text-[11px] font-spacemono uppercase text-gray-300 font-bold">
+                    <label htmlFor={symbolInputId} className="text-[11px] font-spacemono uppercase text-slate-700 dark:text-gray-300 font-bold">
                       Symbol / Pair
                     </label>
-                    <div className="flex gap-1 text-[9px] font-spacemono text-[#F2D231]">
+                    <div className="flex gap-1 text-[9px] font-spacemono text-amber-700 dark:text-[#F2D231] font-bold">
                       {['BTC', 'ETH', 'SOL'].map((token) => (
                         <button
                           key={token}
                           type="button"
                           onClick={() => setSymbol(`${token}/USDT`)}
-                          className="hover:underline"
+                          className="hover:underline cursor-pointer"
                         >
                           {token}
                         </button>
@@ -325,37 +325,37 @@ Please review this trade execution through ${brandName}'s trading psychology and
                     value={symbol}
                     onChange={(e) => setSymbol(e.target.value)}
                     placeholder="BTC/USDT"
-                    className="w-full bg-black/40 border border-white/15 focus:border-[#F2D231] rounded-lg px-2.5 py-1.5 text-sm font-spacemono text-white font-bold uppercase focus:outline-none"
+                    className="w-full bg-slate-50 dark:bg-black/40 border border-slate-300 dark:border-white/15 focus:border-amber-600 dark:focus:border-[#F2D231] rounded-lg px-2.5 py-1.5 text-sm font-spacemono text-slate-900 dark:text-white font-bold uppercase focus:outline-none"
                   />
                 </div>
 
-                <div className="bg-[#071914] border border-white/10 rounded-xl p-3">
-                  <span className="text-[11px] font-spacemono uppercase text-gray-300 font-bold block mb-1.5">
+                <div className="bg-white dark:bg-[#071914] border border-slate-200 dark:border-white/10 rounded-xl p-3 shadow-sm">
+                  <span className="text-[11px] font-spacemono uppercase text-slate-700 dark:text-gray-300 font-bold block mb-1.5">
                     Direction
                   </span>
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       type="button"
                       onClick={() => setDirection('long')}
-                      className={`py-1.5 px-2 rounded-lg text-xs font-spacemono uppercase font-bold flex items-center justify-center gap-1 transition-all ${
+                      className={`py-1.5 px-2 rounded-lg text-xs font-spacemono uppercase font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                         direction === 'long'
-                          ? 'bg-[#123D32] text-[#F2D231] border border-[#F2D231]/40'
-                          : 'bg-black/30 text-gray-400 border border-white/5 hover:text-white'
+                          ? 'bg-emerald-50 text-emerald-900 border border-emerald-300 dark:bg-[#123D32] dark:text-[#F2D231] dark:border-[#F2D231]/40'
+                          : 'bg-slate-100 text-slate-600 border border-slate-200 hover:text-slate-900 dark:bg-black/30 dark:text-gray-400 dark:border-white/5 dark:hover:text-white'
                       }`}
                     >
-                      <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
+                      <TrendingUp className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                       <span>Long</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => setDirection('short')}
-                      className={`py-1.5 px-2 rounded-lg text-xs font-spacemono uppercase font-bold flex items-center justify-center gap-1 transition-all ${
+                      className={`py-1.5 px-2 rounded-lg text-xs font-spacemono uppercase font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                         direction === 'short'
-                          ? 'bg-red-950/70 text-red-300 border border-red-500/40'
-                          : 'bg-black/30 text-gray-400 border border-white/5 hover:text-white'
+                          ? 'bg-rose-50 text-rose-900 border border-rose-300 dark:bg-red-950/70 dark:text-red-300 dark:border-red-500/40'
+                          : 'bg-slate-100 text-slate-600 border border-slate-200 hover:text-slate-900 dark:bg-black/30 dark:text-gray-400 dark:border-white/5 dark:hover:text-white'
                       }`}
                     >
-                      <TrendingDown className="w-3.5 h-3.5 text-red-400" />
+                      <TrendingDown className="w-3.5 h-3.5 text-rose-600 dark:text-red-400" />
                       <span>Short</span>
                     </button>
                   </div>
@@ -363,8 +363,8 @@ Please review this trade execution through ${brandName}'s trading psychology and
               </div>
 
               {/* Setup Type */}
-              <div className="bg-[#071914] border border-white/10 rounded-xl p-3">
-                <label htmlFor={setupTypeInputId} className="text-[11px] font-spacemono uppercase text-gray-300 font-bold block mb-1.5">
+              <div className="bg-white dark:bg-[#071914] border border-slate-200 dark:border-white/10 rounded-xl p-3 shadow-sm">
+                <label htmlFor={setupTypeInputId} className="text-[11px] font-spacemono uppercase text-slate-700 dark:text-gray-300 font-bold block mb-1.5">
                   Setup Type / Methodology
                 </label>
                 <input
@@ -374,7 +374,7 @@ Please review this trade execution through ${brandName}'s trading psychology and
                   value={setupType}
                   onChange={(e) => setSetupType(e.target.value)}
                   placeholder="e.g. Liquidity Sweep, Key Level Retest, Macro Spot"
-                  className="w-full bg-black/40 border border-white/15 focus:border-[#F2D231] rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none mb-2"
+                  className="w-full bg-slate-50 dark:bg-black/40 border border-slate-300 dark:border-white/15 focus:border-amber-600 dark:focus:border-[#F2D231] rounded-lg px-2.5 py-1.5 text-xs text-slate-900 dark:text-white focus:outline-none mb-2"
                 />
                 <div className="flex flex-wrap gap-1">
                   {['Liquidity Sweep', 'Key Level Retest', 'Macro Spot Accumulation', 'Range Reversal', 'Order Block'].map((item) => (
@@ -382,10 +382,10 @@ Please review this trade execution through ${brandName}'s trading psychology and
                       key={item}
                       type="button"
                       onClick={() => setSetupType(item)}
-                      className={`px-2 py-0.5 rounded text-[9px] font-spacemono transition-colors ${
+                      className={`px-2 py-0.5 rounded text-[9px] font-spacemono transition-colors cursor-pointer ${
                         setupType === item
-                          ? 'bg-[#F2D231] text-black font-bold'
-                          : 'bg-white/5 text-gray-400 hover:text-white border border-white/10'
+                          ? 'bg-amber-500 text-slate-950 font-bold dark:bg-[#F2D231] dark:text-black'
+                          : 'bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200 dark:bg-white/5 dark:text-gray-400 dark:hover:text-white dark:border-white/10'
                       }`}
                     >
                       {item}
@@ -397,15 +397,15 @@ Please review this trade execution through ${brandName}'s trading psychology and
               {/* Emotional State & Outcome Row */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {/* Emotional State */}
-                <div className="bg-[#071914] border border-white/10 rounded-xl p-3">
-                  <label htmlFor={emotionalStateInputId} className="text-[11px] font-spacemono uppercase text-gray-300 font-bold block mb-1.5">
+                <div className="bg-white dark:bg-[#071914] border border-slate-200 dark:border-white/10 rounded-xl p-3 shadow-sm">
+                  <label htmlFor={emotionalStateInputId} className="text-[11px] font-spacemono uppercase text-slate-700 dark:text-gray-300 font-bold block mb-1.5">
                     Emotional State
                   </label>
                   <select
                     id={emotionalStateInputId}
                     value={emotionalState}
                     onChange={(e) => setEmotionalState(e.target.value as EmotionalState)}
-                    className="w-full bg-black/40 border border-white/15 focus:border-[#F2D231] rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none"
+                    className="w-full bg-slate-50 dark:bg-black/40 border border-slate-300 dark:border-white/15 focus:border-amber-600 dark:focus:border-[#F2D231] rounded-lg px-2.5 py-1.5 text-xs text-slate-900 dark:text-white focus:outline-none"
                   >
                     <option value="disciplined">🧘 Calm &amp; Disciplined</option>
                     <option value="confident">⚡ Confident / Flow State</option>
@@ -416,15 +416,15 @@ Please review this trade execution through ${brandName}'s trading psychology and
                 </div>
 
                 {/* Outcome */}
-                <div className="bg-[#071914] border border-white/10 rounded-xl p-3">
-                  <label htmlFor={outcomeInputId} className="text-[11px] font-spacemono uppercase text-gray-300 font-bold block mb-1.5">
+                <div className="bg-white dark:bg-[#071914] border border-slate-200 dark:border-white/10 rounded-xl p-3 shadow-sm">
+                  <label htmlFor={outcomeInputId} className="text-[11px] font-spacemono uppercase text-slate-700 dark:text-gray-300 font-bold block mb-1.5">
                     Trade Outcome
                   </label>
                   <select
                     id={outcomeInputId}
                     value={outcome}
                     onChange={(e) => setOutcome(e.target.value as TradeOutcome)}
-                    className="w-full bg-black/40 border border-white/15 focus:border-[#F2D231] rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none"
+                    className="w-full bg-slate-50 dark:bg-black/40 border border-slate-300 dark:border-white/15 focus:border-amber-600 dark:focus:border-[#F2D231] rounded-lg px-2.5 py-1.5 text-xs text-slate-900 dark:text-white focus:outline-none"
                   >
                     <option value="open">⏳ Open / In Play</option>
                     <option value="win">🎯 Target Hit (Win)</option>
@@ -435,9 +435,9 @@ Please review this trade execution through ${brandName}'s trading psychology and
               </div>
 
               {/* Optional Prices & PnL */}
-              <div className="grid grid-cols-3 gap-2 bg-[#071914] border border-white/10 rounded-xl p-3">
+              <div className="grid grid-cols-3 gap-2 bg-white dark:bg-[#071914] border border-slate-200 dark:border-white/10 rounded-xl p-3 shadow-sm">
                 <div>
-                  <label htmlFor={entryPriceInputId} className="text-[10px] font-spacemono uppercase text-gray-400 block mb-1">
+                  <label htmlFor={entryPriceInputId} className="text-[10px] font-spacemono uppercase text-slate-500 dark:text-gray-400 block mb-1">
                     Entry ($)
                   </label>
                   <input
@@ -447,11 +447,11 @@ Please review this trade execution through ${brandName}'s trading psychology and
                     value={entryPrice}
                     onChange={(e) => setEntryPrice(e.target.value)}
                     placeholder="64000"
-                    className="w-full bg-black/40 border border-white/15 rounded-lg px-2 py-1 text-xs text-white font-spacemono focus:outline-none"
+                    className="w-full bg-slate-50 dark:bg-black/40 border border-slate-300 dark:border-white/15 rounded-lg px-2 py-1 text-xs text-slate-900 dark:text-white font-spacemono focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label htmlFor={exitPriceInputId} className="text-[10px] font-spacemono uppercase text-gray-400 block mb-1">
+                  <label htmlFor={exitPriceInputId} className="text-[10px] font-spacemono uppercase text-slate-500 dark:text-gray-400 block mb-1">
                     Exit ($)
                   </label>
                   <input
@@ -461,11 +461,11 @@ Please review this trade execution through ${brandName}'s trading psychology and
                     value={exitPrice}
                     onChange={(e) => setExitPrice(e.target.value)}
                     placeholder="67500"
-                    className="w-full bg-black/40 border border-white/15 rounded-lg px-2 py-1 text-xs text-white font-spacemono focus:outline-none"
+                    className="w-full bg-slate-50 dark:bg-black/40 border border-slate-300 dark:border-white/15 rounded-lg px-2 py-1 text-xs text-slate-900 dark:text-white font-spacemono focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label htmlFor={pnlInputId} className="text-[10px] font-spacemono uppercase text-gray-400 block mb-1">
+                  <label htmlFor={pnlInputId} className="text-[10px] font-spacemono uppercase text-slate-500 dark:text-gray-400 block mb-1">
                     PnL ($)
                   </label>
                   <input
@@ -475,14 +475,14 @@ Please review this trade execution through ${brandName}'s trading psychology and
                     value={pnl}
                     onChange={(e) => setPnl(e.target.value)}
                     placeholder="+350"
-                    className="w-full bg-black/40 border border-white/15 rounded-lg px-2 py-1 text-xs text-white font-spacemono focus:outline-none"
+                    className="w-full bg-slate-50 dark:bg-black/40 border border-slate-300 dark:border-white/15 rounded-lg px-2 py-1 text-xs text-slate-900 dark:text-white font-spacemono focus:outline-none"
                   />
                 </div>
               </div>
 
               {/* Reflection Notes */}
-              <div className="bg-[#071914] border border-white/10 rounded-xl p-3">
-                <label htmlFor={notesInputId} className="text-[11px] font-spacemono uppercase text-gray-300 font-bold block mb-1.5">
+              <div className="bg-white dark:bg-[#071914] border border-slate-200 dark:border-white/10 rounded-xl p-3 shadow-sm">
+                <label htmlFor={notesInputId} className="text-[11px] font-spacemono uppercase text-slate-700 dark:text-gray-300 font-bold block mb-1.5">
                   Psychology &amp; Lessons Learned
                 </label>
                 <textarea
@@ -491,7 +491,7 @@ Please review this trade execution through ${brandName}'s trading psychology and
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Did you respect your invalidation stop? Were you patient with the entry? Note key observations..."
-                  className="w-full bg-black/40 border border-white/15 focus:border-[#F2D231] rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none resize-none leading-relaxed"
+                  className="w-full bg-slate-50 dark:bg-black/40 border border-slate-300 dark:border-white/15 focus:border-amber-600 dark:focus:border-[#F2D231] rounded-lg px-2.5 py-2 text-xs text-slate-900 dark:text-white focus:outline-none resize-none leading-relaxed"
                 />
               </div>
 
@@ -507,7 +507,7 @@ Please review this trade execution through ${brandName}'s trading psychology and
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
-                  className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 font-spacemono text-xs cursor-pointer border border-white/10"
+                  className="px-4 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 dark:bg-white/5 dark:hover:bg-white/10 dark:text-gray-300 font-spacemono text-xs cursor-pointer border border-slate-300 dark:border-white/10"
                 >
                   Cancel
                 </button>
@@ -525,35 +525,35 @@ Please review this trade execution through ${brandName}'s trading psychology and
             >
               {/* Filter Tabs */}
               <div className="flex items-center justify-between gap-1 pb-1">
-                <div className="flex items-center gap-1 bg-[#071914] p-0.5 rounded-lg border border-white/10">
+                <div className="flex items-center gap-1 bg-slate-200 dark:bg-[#071914] p-0.5 rounded-lg border border-slate-300 dark:border-white/10">
                   {(['all', 'win', 'loss', 'open'] as const).map((filter) => (
                     <button
                       key={filter}
                       type="button"
                       onClick={() => setOutcomeFilter(filter)}
-                      className={`px-2 py-1 rounded text-[10px] font-spacemono uppercase transition-colors ${
+                      className={`px-2 py-1 rounded text-[10px] font-spacemono uppercase transition-colors cursor-pointer ${
                         outcomeFilter === filter
-                          ? 'bg-[#F2D231] text-black font-bold'
-                          : 'text-gray-400 hover:text-white'
+                          ? 'bg-amber-500 text-slate-950 font-bold dark:bg-[#F2D231] dark:text-black'
+                          : 'text-slate-600 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white'
                       }`}
                     >
                       {filter === 'all' ? 'All' : filter}
                     </button>
                   ))}
                 </div>
-                <span className="text-[10px] text-gray-400 font-spacemono">
+                <span className="text-[10px] text-slate-500 dark:text-gray-400 font-spacemono">
                   {filteredEntries.length} {filteredEntries.length === 1 ? 'trade' : 'trades'}
                 </span>
               </div>
 
               {filteredEntries.length === 0 ? (
-                <div className="py-12 text-center text-gray-400 space-y-3 border border-dashed border-white/10 rounded-xl bg-black/20">
-                  <BookOpen className="w-8 h-8 mx-auto text-[#F2D231]/40" />
+                <div className="py-12 text-center text-slate-500 dark:text-gray-400 space-y-3 border border-dashed border-slate-300 dark:border-white/10 rounded-xl bg-slate-100/50 dark:bg-black/20">
+                  <BookOpen className="w-8 h-8 mx-auto text-amber-600/60 dark:text-[#F2D231]/40" />
                   <p className="text-xs">No trade journal entries found in this category.</p>
                   <button
                     type="button"
                     onClick={() => setShowForm(true)}
-                    className="px-3 py-1.5 rounded-lg bg-[#123D32] hover:bg-[#1a5244] border border-[#F2D231]/30 text-[#F2D231] text-xs font-spacemono inline-flex items-center gap-1.5 transition-colors"
+                    className="px-3 py-1.5 rounded-lg bg-emerald-800 hover:bg-emerald-900 text-white dark:bg-[#123D32] dark:hover:bg-[#1a5244] border border-emerald-700 dark:border-[#F2D231]/30 dark:text-[#F2D231] text-xs font-spacemono inline-flex items-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <PlusCircle className="w-3.5 h-3.5" />
                     <span>Record First Trade</span>
@@ -590,20 +590,20 @@ Please review this trade execution through ${brandName}'s trading psychology and
                             y: -12,
                             transition: { duration: 0.2 } 
                           }}
-                          className={`bg-[#071914] rounded-xl p-3.5 space-y-2.5 transition-all shadow-sm ${
+                          className={`bg-white dark:bg-[#071914] rounded-xl p-3.5 space-y-2.5 transition-all shadow-sm ${
                             isNew
-                              ? 'border-2 border-[#F2D231] shadow-[0_0_22px_rgba(242,210,49,0.35)] ring-1 ring-[#F2D231]/50'
-                              : 'border border-white/10 hover:border-[#F2D231]/30'
+                              ? 'border-2 border-amber-500 dark:border-[#F2D231] shadow-[0_0_22px_rgba(242,210,49,0.35)] ring-1 ring-amber-400 dark:ring-[#F2D231]/50'
+                              : 'border border-slate-200 dark:border-white/10 hover:border-amber-500 dark:hover:border-[#F2D231]/30'
                           }`}
                         >
                           {/* New Entry Indicator Banner */}
                           {isNew && (
-                            <div className="flex items-center justify-between pb-1 border-b border-[#F2D231]/20">
-                              <span className="inline-flex items-center gap-1.5 text-[10px] font-spacemono text-[#F2D231] font-bold">
-                                <Sparkles className="w-3 h-3 text-[#F2D231]" />
+                            <div className="flex items-center justify-between pb-1 border-b border-amber-300 dark:border-[#F2D231]/20">
+                              <span className="inline-flex items-center gap-1.5 text-[10px] font-spacemono text-amber-700 dark:text-[#F2D231] font-bold">
+                                <Sparkles className="w-3 h-3 text-amber-600 dark:text-[#F2D231]" />
                                 <span>Newly Saved Trade</span>
                               </span>
-                              <span className="text-[9px] font-spacemono text-[#F2D231]/70">
+                              <span className="text-[9px] font-spacemono text-amber-700 dark:text-[#F2D231]/70">
                                 Stored in session
                               </span>
                             </div>
@@ -612,24 +612,24 @@ Please review this trade execution through ${brandName}'s trading psychology and
                           {/* Top Row: Symbol, Direction, Outcome, Time */}
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <span className="font-syne font-bold text-white text-sm tracking-tight">
+                              <span className="font-syne font-bold text-slate-900 dark:text-white text-sm tracking-tight">
                                 {entry.symbol}
                               </span>
                               <span className={`text-[9px] font-spacemono uppercase px-1.5 py-0.5 rounded font-bold border ${
                                 entry.direction === 'long'
-                                  ? 'bg-emerald-950/60 text-emerald-300 border-emerald-500/30'
-                                  : 'bg-red-950/60 text-red-300 border-red-500/30'
+                                  ? 'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-500/30'
+                                  : 'bg-rose-100 text-rose-800 border-rose-300 dark:bg-red-950/60 dark:text-red-300 dark:border-red-500/30'
                               }`}>
                                 {entry.direction}
                               </span>
                               <span className={`text-[9px] font-spacemono uppercase px-1.5 py-0.5 rounded font-bold border ${
                                 isWin
-                                  ? 'bg-emerald-900/60 text-emerald-300 border-emerald-400/40'
+                                  ? 'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-900/60 dark:text-emerald-300 dark:border-emerald-400/40'
                                   : isLoss
-                                    ? 'bg-red-900/60 text-red-300 border-red-400/40'
+                                    ? 'bg-rose-100 text-rose-800 border-rose-300 dark:bg-red-900/60 dark:text-red-300 dark:border-red-400/40'
                                     : isOpen
-                                      ? 'bg-amber-900/60 text-amber-300 border-amber-400/40'
-                                      : 'bg-gray-800 text-gray-300 border-gray-600'
+                                      ? 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-900/60 dark:text-amber-300 dark:border-amber-400/40'
+                                      : 'bg-slate-200 text-slate-800 border-slate-300 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600'
                               }`}>
                                 {entry.outcome === 'win' && 'Target Hit'}
                                 {entry.outcome === 'loss' && 'Stopped Out'}
@@ -639,14 +639,14 @@ Please review this trade execution through ${brandName}'s trading psychology and
                             </div>
 
                             <div className="flex items-center gap-2">
-                              <span className="text-[10px] text-gray-500 font-spacemono">
+                              <span className="text-[10px] text-slate-500 dark:text-gray-500 font-spacemono">
                                 {entry.timestamp}
                               </span>
                               <button
                                 type="button"
                                 onClick={() => handleDelete(entry.id)}
                                 title="Delete entry"
-                                className="text-gray-500 hover:text-red-400 transition-colors p-1 cursor-pointer"
+                                className="text-slate-400 hover:text-rose-600 dark:text-gray-500 dark:hover:text-red-400 transition-colors p-1 cursor-pointer"
                               >
                                 <Trash2 className="w-3 h-3" />
                               </button>
@@ -655,21 +655,21 @@ Please review this trade execution through ${brandName}'s trading psychology and
 
                           {/* Meta: Setup Type & Emotional State */}
                           <div className="flex flex-wrap items-center gap-2 text-[10px] font-spacemono">
-                            <span className="bg-white/5 border border-white/10 px-2 py-0.5 rounded text-gray-300">
-                              Setup: <strong className="text-white">{entry.setupType}</strong>
+                            <span className="bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 px-2 py-0.5 rounded text-slate-700 dark:text-gray-300">
+                              Setup: <strong className="text-slate-900 dark:text-white">{entry.setupType}</strong>
                             </span>
 
                             {/* Emotional State Pill */}
                             <span className={`px-2 py-0.5 rounded border inline-flex items-center gap-1 ${
                               entry.emotionalState === 'disciplined'
-                                ? 'bg-emerald-950/40 text-emerald-300 border-emerald-500/30'
+                                ? 'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-500/30'
                                 : entry.emotionalState === 'confident'
-                                  ? 'bg-blue-950/40 text-blue-300 border-blue-500/30'
+                                  ? 'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-500/30'
                                   : entry.emotionalState === 'hesitant'
-                                    ? 'bg-yellow-950/40 text-yellow-300 border-yellow-500/30'
+                                    ? 'bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-950/40 dark:text-yellow-300 dark:border-yellow-500/30'
                                     : entry.emotionalState === 'fomo'
-                                      ? 'bg-orange-950/40 text-orange-300 border-orange-500/30'
-                                      : 'bg-red-950/40 text-red-300 border-red-500/30'
+                                      ? 'bg-orange-100 text-orange-800 border-orange-300 dark:bg-orange-950/40 dark:text-orange-300 dark:border-orange-500/30'
+                                      : 'bg-rose-100 text-rose-800 border-rose-300 dark:bg-red-950/40 dark:text-red-300 dark:border-red-500/30'
                             }`}>
                               {entry.emotionalState === 'disciplined' && <Smile className="w-3 h-3" />}
                               {entry.emotionalState === 'confident' && <Flame className="w-3 h-3" />}
@@ -683,8 +683,8 @@ Please review this trade execution through ${brandName}'s trading psychology and
                             {entry.pnl !== undefined && (
                               <span className={`px-2 py-0.5 rounded border font-bold ${
                                 entry.pnl >= 0
-                                  ? 'bg-emerald-950/60 text-emerald-400 border-emerald-500/30'
-                                  : 'bg-red-950/60 text-red-400 border-red-500/30'
+                                  ? 'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-400 dark:border-emerald-500/30'
+                                  : 'bg-rose-100 text-rose-800 border-rose-300 dark:bg-red-950/60 dark:text-red-400 dark:border-red-500/30'
                               }`}>
                                 {entry.pnl >= 0 ? '+' : ''}${entry.pnl.toLocaleString()}
                               </span>
@@ -693,7 +693,7 @@ Please review this trade execution through ${brandName}'s trading psychology and
 
                           {/* Reflection Note */}
                           {entry.notes && (
-                            <div className="bg-black/30 rounded-lg p-2 text-[11px] text-gray-300 border-l-2 border-[#F2D231]/60 leading-relaxed font-inter italic">
+                            <div className="bg-slate-100 dark:bg-black/30 rounded-lg p-2 text-[11px] text-slate-700 dark:text-gray-300 border-l-2 border-amber-500 dark:border-[#F2D231]/60 leading-relaxed font-inter italic">
                               "{entry.notes}"
                             </div>
                           )}
@@ -704,9 +704,9 @@ Please review this trade execution through ${brandName}'s trading psychology and
                               <button
                                 type="button"
                                 onClick={() => handleAskAiToReview(entry)}
-                                className="text-[10px] font-spacemono text-[#F2D231] hover:text-[#ffe14d] flex items-center gap-1 bg-white/5 hover:bg-white/10 px-2.5 py-1 rounded-md border border-[#F2D231]/30 transition-all cursor-pointer"
+                                className="text-[10px] font-spacemono text-amber-700 dark:text-[#F2D231] hover:text-amber-800 dark:hover:text-[#ffe14d] flex items-center gap-1 bg-amber-50 hover:bg-amber-100 dark:bg-white/5 dark:hover:bg-white/10 px-2.5 py-1 rounded-md border border-amber-300 dark:border-[#F2D231]/30 transition-all cursor-pointer"
                               >
-                                <Sparkles className="w-3 h-3 text-[#F2D231]" />
+                                <Sparkles className="w-3 h-3 text-amber-600 dark:text-[#F2D231]" />
                                 <span>Review Psychology with AI Mentor</span>
                               </button>
                             </div>

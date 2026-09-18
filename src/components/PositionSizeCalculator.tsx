@@ -86,14 +86,14 @@ const TooltipBadge: React.FC<TooltipBadgeProps> = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 4, scale: 0.96 }}
             transition={{ duration: 0.15 }}
-            className={`absolute top-full mt-1.5 z-50 w-72 sm:w-80 bg-[#0a241e] border border-[#F2D231]/50 rounded-xl p-3.5 shadow-[0_16px_36px_rgba(0,0,0,0.85)] text-left backdrop-blur-md ${
+            className={`absolute top-full mt-1.5 z-50 w-72 sm:w-80 bg-white dark:bg-[#0a241e] border border-slate-300 dark:border-[#F2D231]/50 rounded-xl p-3.5 shadow-xl dark:shadow-[0_16px_36px_rgba(0,0,0,0.85)] text-left backdrop-blur-md ${
               align === 'right' ? 'right-0 sm:right-0' : 'left-0 sm:left-0'
             }`}
           >
             {/* Header */}
-            <div className="flex items-center justify-between gap-1.5 pb-2 border-b border-white/10 mb-2">
-              <div className="flex items-center gap-1.5 font-spacemono font-bold text-[#F2D231] text-xs">
-                <Info className="w-3.5 h-3.5 text-[#F2D231] shrink-0" />
+            <div className="flex items-center justify-between gap-1.5 pb-2 border-b border-slate-200 dark:border-white/10 mb-2">
+              <div className="flex items-center gap-1.5 font-spacemono font-bold text-amber-700 dark:text-[#F2D231] text-xs">
+                <Info className="w-3.5 h-3.5 shrink-0" />
                 <span>{title}</span>
               </div>
               <button
@@ -102,7 +102,7 @@ const TooltipBadge: React.FC<TooltipBadgeProps> = ({
                   e.stopPropagation();
                   setIsOpen(false);
                 }}
-                className="text-gray-400 hover:text-white p-0.5 transition-colors sm:hidden cursor-pointer"
+                className="text-slate-400 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white p-0.5 transition-colors sm:hidden cursor-pointer"
                 aria-label="Close tooltip"
               >
                 <X className="w-3 h-3" />
@@ -110,21 +110,21 @@ const TooltipBadge: React.FC<TooltipBadgeProps> = ({
             </div>
 
             {/* Description */}
-            <p className="text-gray-300 text-[11px] leading-relaxed font-inter mb-2.5">
+            <p className="text-slate-600 dark:text-gray-300 text-[11px] leading-relaxed font-inter mb-2.5">
               {description}
             </p>
 
             {/* Formula */}
             {formula && (
-              <div className="bg-black/50 px-2.5 py-1.5 rounded-lg border border-white/10 font-mono text-[10px] text-[#F2D231] mb-2.5 flex items-center justify-between gap-2">
-                <span className="text-gray-400 text-[9px] uppercase font-spacemono shrink-0">Formula</span>
+              <div className="bg-slate-100 dark:bg-black/50 px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 font-mono text-[10px] text-amber-800 dark:text-[#F2D231] mb-2.5 flex items-center justify-between gap-2">
+                <span className="text-slate-500 dark:text-gray-400 text-[9px] uppercase font-spacemono shrink-0">Formula</span>
                 <code className="text-right truncate">{formula}</code>
               </div>
             )}
 
             {/* Output Impact */}
-            <div className="bg-emerald-950/70 border border-emerald-500/30 rounded-lg p-2 text-[10px] text-emerald-200 font-spacemono leading-normal">
-              <span className="font-bold text-[#F2D231] uppercase block mb-0.5 text-[9px]">
+            <div className="bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-300 dark:border-emerald-500/30 rounded-lg p-2 text-[10px] text-emerald-900 dark:text-emerald-200 font-spacemono leading-normal">
+              <span className="font-bold text-amber-700 dark:text-[#F2D231] uppercase block mb-0.5 text-[9px]">
                 Impact on Final Output
               </span>
               {impact}
@@ -281,67 +281,67 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
   };
 
   return (
-    <div className="bg-[#0d2e26] border border-[#F2D231]/30 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col h-[680px]">
+    <div className="bg-white dark:bg-[#0d2e26] border border-slate-300 dark:border-[#F2D231]/30 rounded-2xl shadow-[0_20px_50px_rgba(15,23,42,0.12)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col h-[680px]">
       {/* Header */}
-      <div className="bg-[#123D32] border-b border-[#F2D231]/20 px-4 py-3 flex items-center justify-between">
+      <div className="bg-slate-100 dark:bg-[#123D32] border-b border-slate-200 dark:border-[#F2D231]/20 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[#F2D231]/15 border border-[#F2D231]/30 flex items-center justify-center text-[#F2D231]">
+          <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-[#F2D231]/15 border border-amber-300 dark:border-[#F2D231]/30 flex items-center justify-center text-amber-800 dark:text-[#F2D231]">
             <Calculator className="w-4 h-4" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-syne font-bold text-white text-sm">Position Size Calculator</span>
-              <span className="text-[10px] font-spacemono uppercase px-1.5 py-0.5 rounded bg-emerald-950/60 text-emerald-300 border border-emerald-500/30">
+              <span className="font-syne font-bold text-slate-900 dark:text-white text-sm">Position Size Calculator</span>
+              <span className="text-[10px] font-spacemono uppercase px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/30 font-semibold">
                 Risk Engine
               </span>
             </div>
-            <p className="text-[11px] text-gray-400 font-inter">
+            <p className="text-[11px] text-slate-500 dark:text-gray-400 font-inter">
               Calculate exact spot lot size &amp; capital at risk
             </p>
           </div>
         </div>
 
         {/* Direction Toggle */}
-        <div className="flex bg-[#071914] p-0.5 rounded-lg border border-white/10">
+        <div className="flex bg-slate-200 dark:bg-[#071914] p-0.5 rounded-lg border border-slate-300 dark:border-white/10">
           <button
             id="calc-dir-long"
             type="button"
             onClick={() => handleDirectionToggle('long')}
-            className={`px-2.5 py-1 rounded-md text-[10px] font-spacemono uppercase font-bold flex items-center gap-1 transition-all ${
+            className={`px-2.5 py-1 rounded-md text-[10px] font-spacemono uppercase font-bold flex items-center gap-1 transition-all cursor-pointer ${
               direction === 'long' 
-                ? 'bg-[#123D32] text-[#F2D231] border border-[#F2D231]/40 shadow-sm' 
-                : 'text-gray-400 hover:text-white'
+                ? 'bg-white text-emerald-900 border border-slate-300 shadow-sm dark:bg-[#123D32] dark:text-[#F2D231] dark:border-[#F2D231]/40' 
+                : 'text-slate-600 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white'
             }`}
           >
-            <TrendingUp className="w-3 h-3 text-emerald-400" />
+            <TrendingUp className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
             <span>Spot / Long</span>
           </button>
           <button
             id="calc-dir-short"
             type="button"
             onClick={() => handleDirectionToggle('short')}
-            className={`px-2.5 py-1 rounded-md text-[10px] font-spacemono uppercase font-bold flex items-center gap-1 transition-all ${
+            className={`px-2.5 py-1 rounded-md text-[10px] font-spacemono uppercase font-bold flex items-center gap-1 transition-all cursor-pointer ${
               direction === 'short' 
-                ? 'bg-red-950/70 text-red-300 border border-red-500/40 shadow-sm' 
-                : 'text-gray-400 hover:text-white'
+                ? 'bg-rose-100 text-rose-900 border border-rose-300 shadow-sm dark:bg-red-950/70 dark:text-red-300 dark:border-red-500/40' 
+                : 'text-slate-600 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white'
             }`}
           >
-            <TrendingDown className="w-3 h-3 text-red-400" />
+            <TrendingDown className="w-3 h-3 text-rose-600 dark:text-red-400" />
             <span>Hedge / Short</span>
           </button>
         </div>
       </div>
 
       {/* Scrollable Form Body */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 font-inter text-xs scrollbar-thin scrollbar-thumb-[#F2D231]/20 scrollbar-track-transparent">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 font-inter text-xs scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-[#F2D231]/20 scrollbar-track-transparent bg-slate-50/50 dark:bg-transparent">
         {/* Account Size & Risk % Row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {/* Account Equity */}
-          <div className="bg-[#071914] border border-white/10 rounded-xl p-3">
+          <div className="bg-white dark:bg-[#071914] border border-slate-200 dark:border-white/10 rounded-xl p-3 shadow-sm">
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-1.5">
-                <label htmlFor={accountSizeInputId} className="text-[11px] font-spacemono uppercase text-gray-300 font-bold flex items-center gap-1">
-                  <DollarSign className="w-3 h-3 text-[#F2D231]" />
+                <label htmlFor={accountSizeInputId} className="text-[11px] font-spacemono uppercase text-slate-700 dark:text-gray-300 font-bold flex items-center gap-1">
+                  <DollarSign className="w-3 h-3 text-amber-600 dark:text-[#F2D231]" />
                   Account Size
                 </label>
                 <TooltipBadge
@@ -352,7 +352,7 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
                   align="left"
                 />
               </div>
-              <span className="text-[10px] text-gray-400 font-spacemono">USD</span>
+              <span className="text-[10px] text-slate-500 dark:text-gray-400 font-spacemono font-semibold">USD</span>
             </div>
             <input
               id={accountSizeInputId}
@@ -361,7 +361,7 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
               step="100"
               value={accountSize || ''}
               onChange={(e) => setAccountSize(parseFloat(e.target.value) || 0)}
-              className="w-full bg-black/40 border border-white/15 focus:border-[#F2D231] rounded-lg px-2.5 py-1.5 text-sm font-spacemono text-white font-bold focus:outline-none"
+              className="w-full bg-slate-50 dark:bg-black/40 border border-slate-300 dark:border-white/15 focus:border-amber-600 dark:focus:border-[#F2D231] rounded-lg px-2.5 py-1.5 text-sm font-spacemono text-slate-900 dark:text-white font-bold focus:outline-none"
               placeholder="10000"
             />
             {/* Quick account presets */}
@@ -371,10 +371,10 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
                   key={val}
                   type="button"
                   onClick={() => handleAccountPreset(val)}
-                  className={`flex-1 py-0.5 rounded text-[9px] font-spacemono border transition-colors ${
+                  className={`flex-1 py-0.5 rounded text-[9px] font-spacemono border transition-colors cursor-pointer ${
                     accountSize === val 
-                      ? 'bg-[#F2D231] text-black font-bold border-[#F2D231]' 
-                      : 'bg-white/5 border-white/10 text-gray-400 hover:text-white'
+                      ? 'bg-amber-500 text-slate-950 font-bold border-amber-600 dark:bg-[#F2D231] dark:text-black dark:border-[#F2D231]' 
+                      : 'bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-600 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white'
                   }`}
                 >
                   ${val >= 1000 ? `${val / 1000}k` : val}
@@ -384,11 +384,11 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
           </div>
 
           {/* Risk Percentage */}
-          <div className="bg-[#071914] border border-white/10 rounded-xl p-3">
+          <div className="bg-white dark:bg-[#071914] border border-slate-200 dark:border-white/10 rounded-xl p-3 shadow-sm">
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-1.5">
-                <label htmlFor={riskPercentInputId} className="text-[11px] font-spacemono uppercase text-gray-300 font-bold flex items-center gap-1">
-                  <Percent className="w-3 h-3 text-[#F2D231]" />
+                <label htmlFor={riskPercentInputId} className="text-[11px] font-spacemono uppercase text-slate-700 dark:text-gray-300 font-bold flex items-center gap-1">
+                  <Percent className="w-3 h-3 text-amber-600 dark:text-[#F2D231]" />
                   Risk Per Trade
                 </label>
                 <TooltipBadge
@@ -399,7 +399,7 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
                   align="right"
                 />
               </div>
-              <span className="text-[10px] font-spacemono text-[#F2D231] font-bold">
+              <span className="text-[10px] font-spacemono text-amber-700 dark:text-[#F2D231] font-bold">
                 ${maxRiskDollar.toFixed(2)} at risk
               </span>
             </div>
@@ -411,7 +411,7 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
               step="0.1"
               value={riskPercent || ''}
               onChange={(e) => setRiskPercent(parseFloat(e.target.value) || 0)}
-              className="w-full bg-black/40 border border-white/15 focus:border-[#F2D231] rounded-lg px-2.5 py-1.5 text-sm font-spacemono text-white font-bold focus:outline-none"
+              className="w-full bg-slate-50 dark:bg-black/40 border border-slate-300 dark:border-white/15 focus:border-amber-600 dark:focus:border-[#F2D231] rounded-lg px-2.5 py-1.5 text-sm font-spacemono text-slate-900 dark:text-white font-bold focus:outline-none"
               placeholder="2.0"
             />
             {/* Quick risk presets */}
@@ -421,10 +421,10 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
                   key={pct}
                   type="button"
                   onClick={() => handleRiskPreset(pct)}
-                  className={`flex-1 py-0.5 rounded text-[9px] font-spacemono border transition-colors ${
+                  className={`flex-1 py-0.5 rounded text-[9px] font-spacemono border transition-colors cursor-pointer ${
                     riskPercent === pct 
-                      ? 'bg-[#F2D231] text-black font-bold border-[#F2D231]' 
-                      : 'bg-white/5 border-white/10 text-gray-400 hover:text-white'
+                      ? 'bg-amber-500 text-slate-950 font-bold border-amber-600 dark:bg-[#F2D231] dark:text-black dark:border-[#F2D231]' 
+                      : 'bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-600 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white'
                   }`}
                 >
                   {pct}%
@@ -435,10 +435,10 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
         </div>
 
         {/* Entry Price & Asset Presets */}
-        <div className="bg-[#071914] border border-white/10 rounded-xl p-3">
+        <div className="bg-white dark:bg-[#071914] border border-slate-200 dark:border-white/10 rounded-xl p-3 shadow-sm">
           <div className="flex items-center justify-between mb-1.5">
             <div className="flex items-center gap-1.5">
-              <label htmlFor={entryPriceInputId} className="text-[11px] font-spacemono uppercase text-gray-300 font-bold">
+              <label htmlFor={entryPriceInputId} className="text-[11px] font-spacemono uppercase text-slate-700 dark:text-gray-300 font-bold">
                 Entry Price ($)
               </label>
               <TooltipBadge
@@ -449,12 +449,12 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
                 align="left"
               />
             </div>
-            <div className="flex items-center gap-1 text-[9px] font-spacemono text-gray-400">
+            <div className="flex items-center gap-1 text-[9px] font-spacemono text-slate-500 dark:text-gray-400">
               <span>Quick Assets:</span>
               <button 
                 type="button" 
                 onClick={() => handleEntryPreset('BTC', 64000)}
-                className="text-[#F2D231] hover:underline"
+                className="text-amber-700 dark:text-[#F2D231] hover:underline font-bold cursor-pointer"
               >
                 BTC
               </button>
@@ -462,7 +462,7 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
               <button 
                 type="button" 
                 onClick={() => handleEntryPreset('ETH', 3450)}
-                className="text-[#F2D231] hover:underline"
+                className="text-amber-700 dark:text-[#F2D231] hover:underline font-bold cursor-pointer"
               >
                 ETH
               </button>
@@ -470,7 +470,7 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
               <button 
                 type="button" 
                 onClick={() => handleEntryPreset('SOL', 145)}
-                className="text-[#F2D231] hover:underline"
+                className="text-amber-700 dark:text-[#F2D231] hover:underline font-bold cursor-pointer"
               >
                 SOL
               </button>
@@ -493,16 +493,16 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
                 }
               }
             }}
-            className="w-full bg-black/40 border border-white/15 focus:border-[#F2D231] rounded-lg px-2.5 py-1.5 text-sm font-spacemono text-white font-bold focus:outline-none"
+            className="w-full bg-slate-50 dark:bg-black/40 border border-slate-300 dark:border-white/15 focus:border-amber-600 dark:focus:border-[#F2D231] rounded-lg px-2.5 py-1.5 text-sm font-spacemono text-slate-900 dark:text-white font-bold focus:outline-none"
             placeholder="64000"
           />
         </div>
 
         {/* Stop Loss Input (Toggle between Price and Distance %) */}
-        <div className="bg-[#071914] border border-white/10 rounded-xl p-3">
+        <div className="bg-white dark:bg-[#071914] border border-slate-200 dark:border-white/10 rounded-xl p-3 shadow-sm">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-1.5">
-              <span className="text-[11px] font-spacemono uppercase text-gray-300 font-bold">
+              <span className="text-[11px] font-spacemono uppercase text-slate-700 dark:text-gray-300 font-bold">
                 Stop-Loss Invalidation
               </span>
               <TooltipBadge
@@ -513,12 +513,12 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
                 align="left"
               />
             </div>
-            <div className="flex bg-black/40 p-0.5 rounded border border-white/10">
+            <div className="flex bg-slate-200 dark:bg-black/40 p-0.5 rounded border border-slate-300 dark:border-white/10">
               <button
                 type="button"
                 onClick={() => setCalcMode('price')}
-                className={`px-2 py-0.5 rounded text-[9px] font-spacemono transition-colors ${
-                  calcMode === 'price' ? 'bg-[#F2D231] text-black font-bold' : 'text-gray-400 hover:text-white'
+                className={`px-2 py-0.5 rounded text-[9px] font-spacemono transition-colors cursor-pointer ${
+                  calcMode === 'price' ? 'bg-amber-500 text-slate-950 font-bold dark:bg-[#F2D231] dark:text-black' : 'text-slate-600 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white'
                 }`}
               >
                 By Price ($)
@@ -526,8 +526,8 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
               <button
                 type="button"
                 onClick={() => setCalcMode('distance')}
-                className={`px-2 py-0.5 rounded text-[9px] font-spacemono transition-colors ${
-                  calcMode === 'distance' ? 'bg-[#F2D231] text-black font-bold' : 'text-gray-400 hover:text-white'
+                className={`px-2 py-0.5 rounded text-[9px] font-spacemono transition-colors cursor-pointer ${
+                  calcMode === 'distance' ? 'bg-amber-500 text-slate-950 font-bold dark:bg-[#F2D231] dark:text-black' : 'text-slate-600 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white'
                 }`}
               >
                 By Distance (%)
@@ -537,9 +537,9 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
 
           {calcMode === 'price' ? (
             <div>
-              <div className="flex items-center justify-between text-[10px] text-gray-400 font-spacemono mb-1">
+              <div className="flex items-center justify-between text-[10px] text-slate-600 dark:text-gray-400 font-spacemono mb-1">
                 <label htmlFor={stopLossPriceInputId}>Stop-Loss Price ($):</label>
-                <span className="text-red-400 font-bold">
+                <span className="text-rose-600 dark:text-red-400 font-bold">
                   -{safeDistancePct.toFixed(2)}% distance (${Math.abs(safeEntry - stopLossPrice).toFixed(2)})
                 </span>
               </div>
@@ -550,15 +550,15 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
                 step="any"
                 value={stopLossPrice || ''}
                 onChange={(e) => handleStopPriceChange(parseFloat(e.target.value) || 0)}
-                className="w-full bg-black/40 border border-white/15 focus:border-[#F2D231] rounded-lg px-2.5 py-1.5 text-sm font-spacemono text-red-300 font-bold focus:outline-none"
+                className="w-full bg-rose-50 dark:bg-black/40 border border-rose-300 dark:border-white/15 focus:border-rose-500 dark:focus:border-[#F2D231] rounded-lg px-2.5 py-1.5 text-sm font-spacemono text-rose-700 dark:text-red-300 font-bold focus:outline-none"
                 placeholder="61440"
               />
             </div>
           ) : (
             <div>
-              <div className="flex items-center justify-between text-[10px] text-gray-400 font-spacemono mb-1">
+              <div className="flex items-center justify-between text-[10px] text-slate-600 dark:text-gray-400 font-spacemono mb-1">
                 <label htmlFor={stopLossDistanceInputId}>Stop Distance (%):</label>
-                <span className="text-red-400 font-bold">
+                <span className="text-rose-600 dark:text-red-400 font-bold">
                   Stop Price: ${stopLossPrice.toLocaleString()}
                 </span>
               </div>
@@ -570,7 +570,7 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
                 step="0.1"
                 value={stopLossDistance || ''}
                 onChange={(e) => handleDistanceChange(parseFloat(e.target.value) || 0)}
-                className="w-full bg-black/40 border border-white/15 focus:border-[#F2D231] rounded-lg px-2.5 py-1.5 text-sm font-spacemono text-red-300 font-bold focus:outline-none"
+                className="w-full bg-rose-50 dark:bg-black/40 border border-rose-300 dark:border-white/15 focus:border-rose-500 dark:focus:border-[#F2D231] rounded-lg px-2.5 py-1.5 text-sm font-spacemono text-rose-700 dark:text-red-300 font-bold focus:outline-none"
                 placeholder="4.0"
               />
               <div className="flex gap-1 mt-1.5">
@@ -579,10 +579,10 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
                     key={dist}
                     type="button"
                     onClick={() => handleDistanceChange(dist)}
-                    className={`flex-1 py-0.5 rounded text-[9px] font-spacemono border transition-colors ${
+                    className={`flex-1 py-0.5 rounded text-[9px] font-spacemono border transition-colors cursor-pointer ${
                       stopLossDistance === dist 
-                        ? 'bg-red-900/60 text-white border-red-500/50' 
-                        : 'bg-white/5 border-white/10 text-gray-400 hover:text-white'
+                        ? 'bg-rose-600 text-white border-rose-700 font-bold dark:bg-red-900/60 dark:border-red-500/50' 
+                        : 'bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-600 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white'
                     }`}
                   >
                     {dist}%
@@ -594,16 +594,16 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
         </div>
 
         {/* Optional Take Profit */}
-        <div className="bg-[#071914] border border-white/10 rounded-xl p-3">
+        <div className="bg-white dark:bg-[#071914] border border-slate-200 dark:border-white/10 rounded-xl p-3 shadow-sm">
           <div className="flex items-center justify-between mb-1.5">
             <div className="flex items-center gap-1.5">
-              <label htmlFor={takeProfitPriceInputId} className="text-[11px] font-spacemono uppercase text-gray-300 font-bold flex items-center gap-1.5">
+              <label htmlFor={takeProfitPriceInputId} className="text-[11px] font-spacemono uppercase text-slate-700 dark:text-gray-300 font-bold flex items-center gap-1.5">
                 <span>Target / Take-Profit ($)</span>
                 <input
                   type="checkbox"
                   checked={includeTp}
                   onChange={(e) => setIncludeTp(e.target.checked)}
-                  className="rounded accent-[#F2D231] cursor-pointer"
+                  className="rounded accent-amber-500 dark:accent-[#F2D231] cursor-pointer"
                 />
               </label>
               <TooltipBadge
@@ -615,7 +615,7 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
               />
             </div>
             {includeTp && riskRewardRatio > 0 && (
-              <span className="text-[10px] font-spacemono text-emerald-400 font-bold">
+              <span className="text-[10px] font-spacemono text-emerald-600 dark:text-emerald-400 font-bold">
                 R:R 1:{riskRewardRatio}
               </span>
             )}
@@ -628,30 +628,30 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
               step="any"
               value={takeProfitPrice || ''}
               onChange={(e) => setTakeProfitPrice(parseFloat(e.target.value) || 0)}
-              className="w-full bg-black/40 border border-white/15 focus:border-[#F2D231] rounded-lg px-2.5 py-1.5 text-sm font-spacemono text-emerald-300 font-bold focus:outline-none"
+              className="w-full bg-emerald-50 dark:bg-black/40 border border-emerald-300 dark:border-white/15 focus:border-emerald-500 dark:focus:border-[#F2D231] rounded-lg px-2.5 py-1.5 text-sm font-spacemono text-emerald-800 dark:text-emerald-300 font-bold focus:outline-none"
               placeholder="71680"
             />
           )}
         </div>
 
         {/* Calculated Results Summary Panel */}
-        <div className="bg-[#123D32]/90 border border-[#F2D231]/30 rounded-xl p-3.5 space-y-2.5 shadow-inner">
-          <div className="flex items-center justify-between border-b border-white/10 pb-2">
-            <span className="font-spacemono uppercase tracking-wider text-[#F2D231] font-bold text-[11px]">
+        <div className="bg-slate-100 dark:bg-[#123D32]/90 border border-slate-300 dark:border-[#F2D231]/30 rounded-xl p-3.5 space-y-2.5 shadow-sm">
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-2">
+            <span className="font-spacemono uppercase tracking-wider text-amber-800 dark:text-[#F2D231] font-bold text-[11px]">
               CALCULATED LOT &amp; RISK METRICS
             </span>
             {safetyStatus === 'safe' && (
-              <span className="inline-flex items-center gap-1 text-[9px] font-spacemono font-bold px-1.5 py-0.5 rounded bg-emerald-900/80 text-emerald-300 border border-emerald-500/40">
+              <span className="inline-flex items-center gap-1 text-[9px] font-spacemono font-bold px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/40">
                 <ShieldCheck className="w-3 h-3" /> Safe Spot
               </span>
             )}
             {safetyStatus === 'moderate' && (
-              <span className="inline-flex items-center gap-1 text-[9px] font-spacemono font-bold px-1.5 py-0.5 rounded bg-yellow-900/80 text-yellow-300 border border-yellow-500/40">
+              <span className="inline-flex items-center gap-1 text-[9px] font-spacemono font-bold px-1.5 py-0.5 rounded bg-yellow-100 dark:bg-yellow-900/80 text-yellow-800 dark:text-yellow-300 border border-yellow-300 dark:border-yellow-500/40">
                 <AlertTriangle className="w-3 h-3" /> Moderate
               </span>
             )}
             {safetyStatus === 'high' && (
-              <span className="inline-flex items-center gap-1 text-[9px] font-spacemono font-bold px-1.5 py-0.5 rounded bg-red-900/80 text-red-300 border border-red-500/40">
+              <span className="inline-flex items-center gap-1 text-[9px] font-spacemono font-bold px-1.5 py-0.5 rounded bg-rose-100 dark:bg-red-900/80 text-rose-800 dark:text-red-300 border border-rose-300 dark:border-red-500/40">
                 <AlertTriangle className="w-3 h-3" /> High Risk
               </span>
             )}
@@ -659,34 +659,34 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
 
           <div className="grid grid-cols-2 gap-2">
             {/* Position Size USD */}
-            <div className="bg-black/30 rounded-lg p-2 border border-white/5">
-              <span className="text-[10px] text-gray-400 font-spacemono block">Recommended Position</span>
-              <span className="text-base sm:text-lg font-spacemono font-bold text-[#F2D231]">
+            <div className="bg-white dark:bg-black/30 rounded-lg p-2 border border-slate-200 dark:border-white/5 shadow-xs">
+              <span className="text-[10px] text-slate-500 dark:text-gray-400 font-spacemono block">Recommended Position</span>
+              <span className="text-base sm:text-lg font-spacemono font-bold text-amber-700 dark:text-[#F2D231]">
                 ${positionSizeUsd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span>
             </div>
 
             {/* Position in Units */}
-            <div className="bg-black/30 rounded-lg p-2 border border-white/5">
-              <span className="text-[10px] text-gray-400 font-spacemono block">Asset Quantity</span>
-              <span className="text-base sm:text-lg font-spacemono font-bold text-white">
-                {positionUnits.toFixed(4)} <span className="text-[10px] text-gray-400 font-normal">units</span>
+            <div className="bg-white dark:bg-black/30 rounded-lg p-2 border border-slate-200 dark:border-white/5 shadow-xs">
+              <span className="text-[10px] text-slate-500 dark:text-gray-400 font-spacemono block">Asset Quantity</span>
+              <span className="text-base sm:text-lg font-spacemono font-bold text-slate-900 dark:text-white">
+                {positionUnits.toFixed(4)} <span className="text-[10px] text-slate-500 dark:text-gray-400 font-normal">units</span>
               </span>
             </div>
 
             {/* Max Capital Loss */}
-            <div className="bg-black/30 rounded-lg p-2 border border-white/5">
-              <span className="text-[10px] text-gray-400 font-spacemono block">Max Risk If Stopped Out</span>
-              <span className="text-sm sm:text-base font-spacemono font-bold text-red-400">
+            <div className="bg-white dark:bg-black/30 rounded-lg p-2 border border-slate-200 dark:border-white/5 shadow-xs">
+              <span className="text-[10px] text-slate-500 dark:text-gray-400 font-spacemono block">Max Risk If Stopped Out</span>
+              <span className="text-sm sm:text-base font-spacemono font-bold text-rose-600 dark:text-red-400">
                 -${maxRiskDollar.toFixed(2)} ({safeRiskPercent}%)
               </span>
             </div>
 
             {/* Portfolio Allocation */}
-            <div className="bg-black/30 rounded-lg p-2 border border-white/5">
-              <span className="text-[10px] text-gray-400 font-spacemono block">Portfolio Allocation</span>
+            <div className="bg-white dark:bg-black/30 rounded-lg p-2 border border-slate-200 dark:border-white/5 shadow-xs">
+              <span className="text-[10px] text-slate-500 dark:text-gray-400 font-spacemono block">Portfolio Allocation</span>
               <span className={`text-sm sm:text-base font-spacemono font-bold ${
-                portfolioAllocationPct <= 100 ? 'text-emerald-400' : 'text-amber-400'
+                portfolioAllocationPct <= 100 ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'
               }`}>
                 {portfolioAllocationPct.toFixed(1)}% {portfolioAllocationPct <= 100 ? '(1x Spot)' : '(Exceeds Spot)'}
               </span>
@@ -694,8 +694,8 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
           </div>
 
           {/* Educational Note */}
-          <div className="bg-black/40 rounded-lg p-2 text-[10px] text-gray-300 font-inter leading-relaxed flex items-start gap-1.5 border border-white/5">
-            <Info className="w-3.5 h-3.5 text-[#F2D231] flex-shrink-0 mt-0.5" />
+          <div className="bg-white dark:bg-black/40 rounded-lg p-2 text-[10px] text-slate-700 dark:text-gray-300 font-inter leading-relaxed flex items-start gap-1.5 border border-slate-200 dark:border-white/5">
+            <Info className="w-3.5 h-3.5 text-amber-600 dark:text-[#F2D231] flex-shrink-0 mt-0.5" />
             <span>
               {portfolioAllocationPct > 100 
                 ? `${brandName} Rule: This position size requires more than your total account capital. Either tighten your stop-loss distance or reduce risk % to keep the trade 100% spot cash funded without leverage.`
@@ -708,7 +708,7 @@ Please evaluate the mathematical safety, liquidity invalidation zone, and spot c
 
       {/* Footer Action: Send to AI Analyst */}
       {onAnalyzeWithAi && (
-        <div className="p-3 bg-[#0c2820] border-t border-[#F2D231]/20">
+        <div className="p-3 bg-slate-100 dark:bg-[#0c2820] border-t border-slate-200 dark:border-[#F2D231]/20">
           <button
             id="calc-send-to-ai-btn"
             type="button"

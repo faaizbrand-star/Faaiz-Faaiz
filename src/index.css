@@ -1,7 +1,28 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
+    --gold: #B45309;
+    --gold2: #92400E;
+    --gold3: #D97706;
+    --dark: #0F172A;
+    --white: #FFFFFF;
+    --off: #F8FAFC;
+    --surface: #F1F5F9;
+    --border: rgba(15, 23, 42, 0.12);
+    --border-strong: rgba(15, 23, 42, 0.28);
+    --text: #0F172A;
+    --muted: #475569;
+    --red: #DC2626;
+    --green: #059669;
+    --blue: #2563EB;
+    --lavender: #6D28D9;
+    --solid-dark: #FFFFFF;
+  }
+
+  :root.dark, .dark {
     --gold: #F2D231;
     --gold2: #D4B22A;
     --gold3: #FFE873;
@@ -22,9 +43,8 @@
 
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background-color: #123D32;
-    color: #D6F0E5;
     overflow-x: hidden;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 }
 
@@ -48,9 +68,12 @@
 }
 
 .brand-accent {
-  color: #F2D231;
+  color: #B45309;
   font-style: italic;
   font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+}
+.dark .brand-accent {
+  color: #F2D231;
 }
 
 /* Glowing Pulsing Amber / Gold Dot */
@@ -58,9 +81,13 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
+  background-color: #D97706;
+  box-shadow: 0 0 6px #D97706;
+  animation: dotPulse 2s ease-in-out infinite;
+}
+.dark .edot {
   background-color: #F2D231;
   box-shadow: 0 0 8px #F2D231;
-  animation: dotPulse 2s ease-in-out infinite;
 }
 
 @keyframes dotPulse {
@@ -74,9 +101,14 @@
   }
 }
 
-/* Background Texture matching luxury dark green */
+/* Background Texture matching luxury light & dark green */
 .bg-grid-pattern {
   background-size: 36px 36px;
+  background-image: 
+    linear-gradient(to right, rgba(15, 23, 42, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
+}
+.dark .bg-grid-pattern {
   background-image: 
     linear-gradient(to right, rgba(242, 210, 49, 0.04) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(242, 210, 49, 0.04) 1px, transparent 1px);
@@ -88,15 +120,24 @@
   left: 0;
   right: 0;
   height: 3px;
+  background: linear-gradient(90deg, #D97706, #B45309, transparent);
+}
+.dark .hero-accent-line {
   background: linear-gradient(90deg, #F2D231, #D4B22A, transparent);
 }
 
 /* Gold glow shadows */
 .glow-gold {
+  box-shadow: 0 0 30px -5px rgba(217, 119, 6, 0.2);
+}
+.dark .glow-gold {
   box-shadow: 0 0 35px -5px rgba(242, 210, 49, 0.25);
 }
 
 .glow-gold-sm {
+  box-shadow: 0 0 14px -2px rgba(217, 119, 6, 0.25);
+}
+.dark .glow-gold-sm {
   box-shadow: 0 0 16px -2px rgba(242, 210, 49, 0.3);
 }
 
@@ -107,14 +148,23 @@
 }
 
 ::-webkit-scrollbar-track {
+  background: #E2E8F0;
+}
+.dark ::-webkit-scrollbar-track {
   background: #0E2E25;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1E5747;
+  background: #CBD5E1;
   border-radius: 3px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #1E5747;
 }
 
 ::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
   background: #D4B22A;
 }

@@ -247,35 +247,35 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
   const ActiveIcon = activeRole.icon;
 
   return (
-    <section id="ai-analyst" className="py-20 bg-[#0a231d] border-t border-b border-[#F2D231]/20 relative overflow-hidden">
+    <section id="ai-analyst" className="py-20 bg-slate-50 dark:bg-[#0a231d] border-t border-b border-slate-200 dark:border-[#F2D231]/20 relative overflow-hidden transition-colors duration-200">
       {/* Background Ambience */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-[#F2D231]/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#123D32]/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-amber-400/5 dark:bg-[#F2D231]/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-600/5 dark:bg-[#123D32]/20 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#123D32] border border-[#F2D231]/30 text-[#F2D231] text-xs font-spacemono uppercase tracking-wider mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-[#123D32] border border-emerald-300 dark:border-[#F2D231]/30 text-emerald-900 dark:text-[#F2D231] text-xs font-spacemono uppercase tracking-wider mb-4 font-semibold">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Interactive Gemini AI Intelligence</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-syne font-extrabold text-white tracking-tight mb-4">
-            Ask The <span className="text-[#F2D231]">{brandName} AI</span> Analyst
+          <h2 className="text-3xl sm:text-4xl font-syne font-extrabold text-slate-900 dark:text-white tracking-tight mb-4">
+            Ask The <span className="text-amber-600 dark:text-[#F2D231]">{brandName} AI</span> Analyst
           </h2>
-          <p className="text-gray-300 font-inter text-sm sm:text-base leading-relaxed mb-6">
+          <p className="text-slate-600 dark:text-gray-300 font-inter text-sm sm:text-base leading-relaxed mb-6">
             Multi-turn intelligent market reasoning powered by specialized Gemini engines. Calibrate roles between high-speed terminology, general macro spot education, and quantitative position risk modeling.
           </p>
 
           {/* Workspace Mode Switcher */}
-          <div className="inline-flex items-center p-1 rounded-xl bg-[#071914] border border-[#F2D231]/30 shadow-lg flex-wrap justify-center gap-1">
+          <div className="inline-flex items-center p-1 rounded-xl bg-slate-200 dark:bg-[#071914] border border-slate-300 dark:border-[#F2D231]/30 shadow-md flex-wrap justify-center gap-1">
             <button
               id="workspace-view-both"
               type="button"
               onClick={() => setWorkspaceView('both')}
               className={`px-3 py-1.5 rounded-lg text-xs font-spacemono flex items-center gap-1.5 transition-all cursor-pointer ${
                 workspaceView === 'both'
-                  ? 'bg-[#F2D231] text-black font-bold shadow-sm'
-                  : 'text-gray-300 hover:text-white'
+                  ? 'bg-emerald-800 text-white dark:bg-[#F2D231] dark:text-black font-bold shadow-sm'
+                  : 'text-slate-700 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white'
               }`}
             >
               <LayoutGrid className="w-3.5 h-3.5" />
@@ -288,8 +288,8 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
               onClick={() => setWorkspaceView('chat')}
               className={`px-3 py-1.5 rounded-lg text-xs font-spacemono flex items-center gap-1.5 transition-all cursor-pointer ${
                 workspaceView === 'chat'
-                  ? 'bg-[#F2D231] text-black font-bold shadow-sm'
-                  : 'text-gray-300 hover:text-white'
+                  ? 'bg-emerald-800 text-white dark:bg-[#F2D231] dark:text-black font-bold shadow-sm'
+                  : 'text-slate-700 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white'
               }`}
             >
               <Bot className="w-3.5 h-3.5" />
@@ -304,8 +304,8 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
               }}
               className={`px-3 py-1.5 rounded-lg text-xs font-spacemono flex items-center gap-1.5 transition-all cursor-pointer ${
                 workspaceView === 'calculator'
-                  ? 'bg-[#F2D231] text-black font-bold shadow-sm'
-                  : 'text-gray-300 hover:text-white'
+                  ? 'bg-emerald-800 text-white dark:bg-[#F2D231] dark:text-black font-bold shadow-sm'
+                  : 'text-slate-700 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white'
               }`}
             >
               <Calculator className="w-3.5 h-3.5" />
@@ -320,8 +320,8 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
               }}
               className={`px-3 py-1.5 rounded-lg text-xs font-spacemono flex items-center gap-1.5 transition-all cursor-pointer ${
                 workspaceView === 'journal'
-                  ? 'bg-[#F2D231] text-black font-bold shadow-sm'
-                  : 'text-gray-300 hover:text-white'
+                  ? 'bg-emerald-800 text-white dark:bg-[#F2D231] dark:text-black font-bold shadow-sm'
+                  : 'text-slate-700 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white'
               }`}
             >
               <BookOpen className="w-3.5 h-3.5" />
@@ -340,22 +340,22 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
                 ? 'col-span-1 lg:col-span-12 max-w-4xl mx-auto w-full' 
                 : 'col-span-1 lg:col-span-7 w-full'
           }`}>
-            <div className="bg-[#0d2e26] border border-[#F2D231]/30 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col h-[680px]">
+            <div className="bg-white dark:bg-[#0d2e26] border border-slate-300 dark:border-[#F2D231]/30 rounded-2xl shadow-[0_20px_50px_rgba(15,23,42,0.12)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col h-[680px]">
           {/* Terminal Control Bar */}
-          <div className="bg-[#123D32] border-b border-[#F2D231]/20 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+          <div className="bg-slate-100 dark:bg-[#123D32] border-b border-slate-200 dark:border-[#F2D231]/20 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
             {/* Active Role Indicator */}
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#F2D231]/15 border border-[#F2D231]/30 flex items-center justify-center text-[#F2D231]">
+              <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-[#F2D231]/15 border border-amber-300 dark:border-[#F2D231]/30 flex items-center justify-center text-amber-800 dark:text-[#F2D231]">
                 <ActiveIcon className="w-4 h-4" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="font-syne font-bold text-white text-sm">{activeRole.name}</span>
-                  <span className="text-[10px] font-spacemono uppercase px-1.5 py-0.5 rounded bg-[#F2D231]/15 text-[#F2D231] border border-[#F2D231]/30">
+                  <span className="font-syne font-bold text-slate-900 dark:text-white text-sm">{activeRole.name}</span>
+                  <span className="text-[10px] font-spacemono uppercase px-1.5 py-0.5 rounded bg-slate-200 dark:bg-[#F2D231]/15 text-slate-800 dark:text-[#F2D231] border border-slate-300 dark:border-[#F2D231]/30 font-semibold">
                     {modelOverride}
                   </span>
                 </div>
-                <p className="text-[11px] text-gray-400 font-inter hidden sm:block">
+                <p className="text-[11px] text-slate-500 dark:text-gray-400 font-inter hidden sm:block">
                   {activeRole.shortDesc}
                 </p>
               </div>
@@ -367,17 +367,17 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
                 <button
                   id="section-role-menu-toggle"
                   onClick={() => setShowRoleMenu(!showRoleMenu)}
-                  className="px-2.5 py-1.5 rounded-lg bg-[#071914] hover:bg-black/50 border border-white/10 hover:border-[#F2D231]/40 text-xs font-spacemono text-gray-200 flex items-center gap-1.5 transition-colors"
+                  className="px-2.5 py-1.5 rounded-lg bg-white dark:bg-[#071914] hover:bg-slate-100 dark:hover:bg-black/50 border border-slate-300 dark:border-white/10 hover:border-amber-500 dark:hover:border-[#F2D231]/40 text-xs font-spacemono text-slate-700 dark:text-gray-200 flex items-center gap-1.5 transition-colors"
                 >
-                  <Sliders className="w-3.5 h-3.5 text-[#F2D231]" />
+                  <Sliders className="w-3.5 h-3.5 text-amber-600 dark:text-[#F2D231]" />
                   <span>Switch Role</span>
-                  <ChevronDown className="w-3 h-3 text-gray-400" />
+                  <ChevronDown className="w-3 h-3 text-slate-400 dark:text-gray-400" />
                 </button>
 
                 {/* Dropdown Menu */}
                 {showRoleMenu && (
-                  <div className="absolute right-0 top-full mt-1 w-64 bg-[#09221b] border border-[#F2D231]/30 rounded-xl shadow-xl p-2 z-20 animate-fade-in text-xs">
-                    <div className="text-[10px] font-spacemono uppercase text-[#F2D231] font-bold px-2 py-1 mb-1">
+                  <div className="absolute right-0 top-full mt-1 w-64 bg-white dark:bg-[#09221b] border border-slate-300 dark:border-[#F2D231]/30 rounded-xl shadow-xl p-2 z-20 animate-fade-in text-xs">
+                    <div className="text-[10px] font-spacemono uppercase text-amber-700 dark:text-[#F2D231] font-bold px-2 py-1 mb-1">
                       Select Chatbot Persona:
                     </div>
                     {(Object.keys(ROLES) as ChatRoleType[]).map((key) => {
@@ -391,15 +391,15 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
                           onClick={() => handleSelectRole(key)}
                           className={`w-full p-2 rounded-lg text-left flex items-start gap-2 transition-colors ${
                             isSelected
-                              ? 'bg-[#123D32] text-white border border-[#F2D231]/40'
-                              : 'text-gray-300 hover:bg-white/5'
+                              ? 'bg-slate-100 dark:bg-[#123D32] text-slate-900 dark:text-white border border-slate-300 dark:border-[#F2D231]/40 font-semibold'
+                              : 'text-slate-700 dark:text-gray-300 hover:bg-slate-50 dark:hover:bg-white/5'
                           }`}
                         >
                           <Icon className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: r.accentColor }} />
                           <div>
-                            <div className="font-syne font-bold text-xs text-white">{r.name}</div>
-                            <div className="text-[10px] text-gray-400 font-inter leading-tight mb-1">{r.shortDesc}</div>
-                            <div className="text-[9px] font-spacemono text-[#F2D231]">Engine: {r.defaultModel}</div>
+                            <div className="font-syne font-bold text-xs text-slate-900 dark:text-white">{r.name}</div>
+                            <div className="text-[10px] text-slate-500 dark:text-gray-400 font-inter leading-tight mb-1">{r.shortDesc}</div>
+                            <div className="text-[9px] font-spacemono text-amber-700 dark:text-[#F2D231]">Engine: {r.defaultModel}</div>
                           </div>
                         </button>
                       );
@@ -413,7 +413,7 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
                 id="section-clear-btn"
                 onClick={handleClear}
                 title="Reset conversation"
-                className="p-1.5 rounded-lg text-gray-400 hover:text-red-400 hover:bg-white/5 transition-colors"
+                className="p-1.5 rounded-lg text-slate-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
               >
                 <Trash2 className="w-4 h-4" />
               </button>
@@ -421,8 +421,8 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
           </div>
 
           {/* Model Engine Selector Tabs */}
-          <div className="bg-[#09221b] border-b border-white/5 px-4 py-2 flex flex-wrap items-center justify-between text-xs gap-2">
-            <span className="text-[10px] font-spacemono uppercase text-gray-400">
+          <div className="bg-slate-50 dark:bg-[#09221b] border-b border-slate-200 dark:border-white/5 px-4 py-2 flex flex-wrap items-center justify-between text-xs gap-2">
+            <span className="text-[10px] font-spacemono uppercase text-slate-600 dark:text-gray-400 font-semibold">
               Task Complexity &amp; Model Routing:
             </span>
             <div className="flex gap-1.5">
@@ -437,10 +437,10 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
                     setModelOverride(item.model);
                     setSelectedRole(item.role);
                   }}
-                  className={`px-2.5 py-1 rounded-md text-[10px] font-spacemono transition-all ${
+                  className={`px-2.5 py-1 rounded-md text-[10px] font-spacemono transition-all cursor-pointer ${
                     modelOverride === item.model
-                      ? 'bg-[#F2D231] text-black font-bold shadow-[0_0_10px_rgba(242,210,49,0.25)]'
-                      : 'bg-[#061713] text-gray-400 hover:text-white border border-white/5'
+                      ? 'bg-emerald-800 text-white dark:bg-[#F2D231] dark:text-black font-bold shadow-sm'
+                      : 'bg-white dark:bg-[#061713] text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/5'
                   }`}
                 >
                   {item.label}
@@ -453,7 +453,7 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
           <div 
             ref={threadContainerRef}
             id="section-messages-thread"
-            className="flex-1 overflow-y-auto p-4 space-y-4 text-sm font-inter scrollbar-thin scrollbar-thumb-[#F2D231]/20 scrollbar-track-transparent"
+            className="flex-1 overflow-y-auto p-4 space-y-4 text-sm font-inter scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-[#F2D231]/20 scrollbar-track-transparent bg-slate-50/50 dark:bg-transparent"
           >
             {messages.map((msg) => {
               const isUser = msg.role === 'user';
@@ -465,7 +465,7 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
                   className={`flex gap-3 ${isUser ? 'justify-end' : 'justify-start'}`}
                 >
                   {!isUser && (
-                    <div className="w-8 h-8 rounded-full bg-[#123D32] border border-[#F2D231]/30 flex items-center justify-center flex-shrink-0 text-[#F2D231] mt-0.5">
+                    <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-[#123D32] border border-emerald-300 dark:border-[#F2D231]/30 flex items-center justify-center flex-shrink-0 text-emerald-800 dark:text-[#F2D231] mt-0.5">
                       <Bot className="w-4 h-4" />
                     </div>
                   )}
@@ -473,46 +473,46 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
                   <div 
                     className={`relative group max-w-[85%] sm:max-w-[78%] rounded-xl p-3.5 leading-relaxed ${
                       isUser
-                        ? 'bg-[#1b4b3e] text-white border border-[#F2D231]/30 rounded-tr-none'
-                        : 'bg-[#0f342b] text-gray-200 border border-white/10 rounded-tl-none shadow-md'
+                        ? 'bg-emerald-800 text-white dark:bg-[#1b4b3e] dark:text-white border border-emerald-700 dark:border-[#F2D231]/30 rounded-tr-none shadow-sm'
+                        : 'bg-white text-slate-800 border border-slate-200 shadow-sm dark:bg-[#0f342b] dark:text-gray-200 dark:border-white/10 rounded-tl-none'
                     }`}
                   >
                     {/* Header line inside bubble */}
                     <div className="flex items-center justify-between gap-2 mb-1.5">
-                      <span className="text-[10px] font-spacemono font-bold tracking-wide uppercase text-[#F2D231]">
+                      <span className="text-[10px] font-spacemono font-bold tracking-wide uppercase text-amber-700 dark:text-[#F2D231]">
                         {isUser ? 'You' : `${brandName} AI Analyst`}
                       </span>
-                      <div className="flex items-center gap-1.5 opacity-70">
+                      <div className="flex items-center gap-1.5 opacity-80">
                         {!isUser && msg.modelUsed && (
-                          <span className="text-[9px] font-spacemono px-1.5 py-0.2 rounded bg-black/40 text-gray-400">
+                          <span className="text-[9px] font-spacemono px-1.5 py-0.2 rounded bg-slate-100 dark:bg-black/40 text-slate-600 dark:text-gray-400 border border-slate-200 dark:border-transparent">
                             {msg.modelUsed}
                           </span>
                         )}
-                        <span className="text-[9px] text-gray-400 font-spacemono">{msg.timestamp}</span>
+                        <span className="text-[9px] text-slate-500 dark:text-gray-400 font-spacemono">{msg.timestamp}</span>
                         <button
                           onClick={() => handleCopy(msg.id, msg.text)}
                           title="Copy text"
-                          className="opacity-0 group-hover:opacity-100 hover:text-white transition-opacity ml-1"
+                          className="opacity-0 group-hover:opacity-100 hover:text-slate-900 dark:hover:text-white transition-opacity ml-1 cursor-pointer"
                         >
-                          {isCopied ? <Check className="w-3 h-3 text-green-400" /> : <Copy className="w-3 h-3 text-gray-400" />}
+                          {isCopied ? <Check className="w-3 h-3 text-emerald-600 dark:text-green-400" /> : <Copy className="w-3 h-3 text-slate-400" />}
                         </button>
                       </div>
                     </div>
 
                     {/* Content */}
-                    <div className="whitespace-pre-wrap text-[13px] sm:text-sm text-gray-100 space-y-2 leading-relaxed font-inter">
+                    <div className="whitespace-pre-wrap text-[13px] sm:text-sm text-slate-800 dark:text-gray-100 space-y-2 leading-relaxed font-inter">
                       {formatChatText(msg.text)}
                     </div>
 
                     {msg.isFallback && (
-                      <div className="mt-2 pt-2 border-t border-white/10 text-[10px] text-[#F2D231]/80 font-spacemono">
+                      <div className="mt-2 pt-2 border-t border-slate-200 dark:border-white/10 text-[10px] text-amber-700 dark:text-[#F2D231]/80 font-spacemono">
                         • Verified Educational Knowledge Base
                       </div>
                     )}
                   </div>
 
                   {isUser && (
-                    <div className="w-8 h-8 rounded-full bg-[#1b4b3e] border border-[#F2D231]/30 flex items-center justify-center flex-shrink-0 text-white mt-0.5">
+                    <div className="w-8 h-8 rounded-full bg-emerald-900 border border-emerald-700 dark:bg-[#1b4b3e] dark:border-[#F2D231]/30 flex items-center justify-center flex-shrink-0 text-white mt-0.5">
                       <User className="w-4 h-4" />
                     </div>
                   )}
@@ -523,17 +523,17 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
             {/* Typing Loader */}
             {isLoading && (
               <div className="flex gap-3 justify-start items-center">
-                <div className="w-8 h-8 rounded-full bg-[#123D32] border border-[#F2D231]/30 flex items-center justify-center flex-shrink-0 text-[#F2D231]">
+                <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-[#123D32] border border-emerald-300 dark:border-[#F2D231]/30 flex items-center justify-center flex-shrink-0 text-emerald-800 dark:text-[#F2D231]">
                   <Bot className="w-4 h-4 animate-pulse" />
                 </div>
-                <div className="bg-[#0f342b] border border-white/10 rounded-xl rounded-tl-none p-3 text-gray-300 flex items-center gap-2">
-                  <span className="text-xs font-spacemono text-gray-400">
+                <div className="bg-white dark:bg-[#0f342b] border border-slate-200 dark:border-white/10 rounded-xl rounded-tl-none p-3 text-slate-700 dark:text-gray-300 flex items-center gap-2 shadow-sm">
+                  <span className="text-xs font-spacemono text-slate-500 dark:text-gray-400">
                     {activeRole.name} is processing via {modelOverride}...
                   </span>
                   <span className="flex gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#F2D231] animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#F2D231] animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#F2D231] animate-bounce" style={{ animationDelay: '300ms' }} />
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-[#F2D231] animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-[#F2D231] animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-[#F2D231] animate-bounce" style={{ animationDelay: '300ms' }} />
                   </span>
                 </div>
               </div>
@@ -543,13 +543,13 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
           </div>
 
           {/* Quick Prompts Bar */}
-          <div className="px-4 py-2 bg-[#09221b] border-t border-white/5 flex gap-2 overflow-x-auto scrollbar-none">
+          <div className="px-4 py-2 bg-slate-100 dark:bg-[#09221b] border-t border-slate-200 dark:border-white/5 flex gap-2 overflow-x-auto scrollbar-none">
             {SUGGESTED_QUESTIONS[selectedRole].map((q, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSend(q)}
                 disabled={isLoading}
-                className="flex-shrink-0 px-2.5 py-1 rounded-full bg-[#123D32]/80 hover:bg-[#123D32] border border-[#F2D231]/20 hover:border-[#F2D231]/60 text-[11px] text-gray-300 hover:text-white transition-all whitespace-nowrap"
+                className="flex-shrink-0 px-2.5 py-1 rounded-full bg-white dark:bg-[#123D32]/80 hover:bg-slate-200 dark:hover:bg-[#123D32] border border-slate-300 dark:border-[#F2D231]/20 hover:border-amber-500 dark:hover:border-[#F2D231]/60 text-[11px] text-slate-700 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white transition-all whitespace-nowrap cursor-pointer"
               >
                 {q}
               </button>
@@ -557,7 +557,7 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
           </div>
 
           {/* Input Bar */}
-          <div className="p-3 bg-[#0c2820] border-t border-[#F2D231]/20">
+          <div className="p-3 bg-slate-100 dark:bg-[#0c2820] border-t border-slate-200 dark:border-[#F2D231]/20">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -571,7 +571,7 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
                 value={inputPrompt}
                 onChange={(e) => setInputPrompt(e.target.value)}
                 placeholder={`Ask ${activeRole.name} anything about spot analysis, math, or risk...`}
-                className="flex-1 bg-[#071914] border border-white/15 focus:border-[#F2D231] rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none transition-colors"
+                className="flex-1 bg-white dark:bg-[#071914] border border-slate-300 dark:border-white/15 focus:border-amber-600 dark:focus:border-[#F2D231] rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-500 focus:outline-none transition-colors"
                 disabled={isLoading}
               />
 
@@ -579,9 +579,9 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
                 type="submit"
                 id="section-chat-submit"
                 disabled={isLoading || !inputPrompt.trim()}
-                className={`px-4 py-3 rounded-xl flex items-center justify-center gap-2 transition-all ${
+                className={`px-4 py-3 rounded-xl flex items-center justify-center gap-2 transition-all cursor-pointer ${
                   isLoading || !inputPrompt.trim()
-                    ? 'bg-gray-800 text-gray-500 cursor-not-allowed border border-white/5'
+                    ? 'bg-slate-200 dark:bg-gray-800 text-slate-400 dark:text-gray-500 cursor-not-allowed border border-slate-300 dark:border-white/5'
                     : 'bg-[#F2D231] hover:bg-[#ffe14d] text-black font-bold shadow-[0_0_15px_rgba(242,210,49,0.3)] hover:scale-105 active:scale-95'
                 }`}
               >
@@ -603,15 +603,15 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
       }`}>
         {/* Companion Tab Switcher in Dual mode */}
         {workspaceView === 'both' && (
-          <div className="flex bg-[#071914] p-1 rounded-xl border border-[#F2D231]/20 mb-3 gap-1">
+          <div className="flex bg-slate-200 dark:bg-[#071914] p-1 rounded-xl border border-slate-300 dark:border-[#F2D231]/20 mb-3 gap-1 shadow-sm">
             <button
               id="companion-tab-calculator"
               type="button"
               onClick={() => setCompanionTab('calculator')}
               className={`flex-1 py-1.5 rounded-lg text-xs font-spacemono flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                 companionTab === 'calculator'
-                  ? 'bg-[#123D32] text-[#F2D231] font-bold border border-[#F2D231]/40 shadow-sm'
-                  : 'text-gray-400 hover:text-white'
+                  ? 'bg-white text-emerald-950 font-bold border border-slate-300 shadow-sm dark:bg-[#123D32] dark:text-[#F2D231] dark:border-[#F2D231]/40'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white'
               }`}
             >
               <Calculator className="w-3.5 h-3.5" />
@@ -623,8 +623,8 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
               onClick={() => setCompanionTab('journal')}
               className={`flex-1 py-1.5 rounded-lg text-xs font-spacemono flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                 companionTab === 'journal'
-                  ? 'bg-[#123D32] text-[#F2D231] font-bold border border-[#F2D231]/40 shadow-sm'
-                  : 'text-gray-400 hover:text-white'
+                  ? 'bg-white text-emerald-950 font-bold border border-slate-300 shadow-sm dark:bg-[#123D32] dark:text-[#F2D231] dark:border-[#F2D231]/40'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white'
               }`}
             >
               <BookOpen className="w-3.5 h-3.5" />
