@@ -199,3 +199,20 @@ export interface ChatMessage {
   isFallback?: boolean;
 }
 
+export type TradeOutcome = 'win' | 'loss' | 'breakeven' | 'open';
+export type EmotionalState = 'disciplined' | 'hesitant' | 'fomo' | 'anxious' | 'confident';
+
+export interface TradeJournalEntry {
+  id: string;
+  symbol: string;
+  direction: 'long' | 'short';
+  setupType: string;
+  emotionalState: EmotionalState;
+  outcome: TradeOutcome;
+  entryPrice?: number;
+  exitPrice?: number;
+  pnl?: number;
+  notes?: string;
+  timestamp: string;
+}
+

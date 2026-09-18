@@ -14,9 +14,13 @@ import {
   ChevronDown,
   ExternalLink,
   ShieldCheck,
-  Info
+  Info,
+  Calculator,
+  LayoutGrid
 } from 'lucide-react';
 import { ChatMessage, ChatRoleType, TaskComplexity } from '../types';
+import { PositionSizeCalculator } from './PositionSizeCalculator';
+import { SimpleTradeJournal } from './SimpleTradeJournal';
 
 interface AiAnalystSectionProps {
   brandName?: string;
@@ -114,6 +118,8 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
   const [modelOverride, setModelOverride] = useState<string>('gemini-3.5-flash');
   const [showRoleMenu, setShowRoleMenu] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [workspaceView, setWorkspaceView] = useState<'both' | 'chat' | 'calculator' | 'journal'>('both');
+  const [companionTab, setCompanionTab] = useState<'calculator' | 'journal'>('calculator');
 
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -161,9 +167,21 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const handleSend = async (textOverride?: string) => {
+  const handleSend = async (textOverride?: string, roleOverride?: ChatRoleType) => {
     const text = (textOverride || inputPrompt).trim();
     if (!text || isLoading) return;
+
+    const targetRole = roleOverride || selectedRole;
+    const targetModel = roleOverride ? ROLES[roleOverride].defaultModel : modelOverride;
+
+    if (roleOverride) {
+      setSelectedRole(roleOverride);
+      setModelOverride(targetModel);
+    }
+
+    if (workspaceView === 'calculator' || workspaceView === 'journal') {
+      setWorkspaceView('both');
+    }
 
     const userMsg: ChatMessage = {
       id: 'usr-' + Date.now(),
@@ -183,9 +201,9 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           messages: newHistory.map(m => ({ role: m.role, text: m.text })),
-          model: modelOverride,
-          roleId: selectedRole,
-          taskComplexity: ROLES[selectedRole].taskComplexity
+          model: targetModel,
+          roleId: targetRole,
+          taskComplexity: ROLES[targetRole].taskComplexity
         })
       });
 
@@ -198,8 +216,8 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
           role: 'model',
           text: data.reply,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          modelUsed: data.modelUsed || modelOverride,
-          roleId: data.roleId || selectedRole,
+          modelUsed: data.modelUsed || targetModel,
+          roleId: data.roleId || targetRole,
           isFallback: data.isFallback
         };
         setMessages(prev => [...prev, botMsg]);
@@ -209,14 +227,14 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
     } catch (err) {
       console.warn('Chat request fallback:', err);
       // Static / offline fallback response
-      const fallbackText = getFallbackText(text, selectedRole, brandName);
+      const fallbackText = getFallbackText(text, targetRole, brandName);
       const botMsg: ChatMessage = {
         id: 'bot-fb-' + Date.now(),
         role: 'model',
         text: fallbackText,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        modelUsed: modelOverride,
-        roleId: selectedRole,
+        modelUsed: targetModel,
+        roleId: targetRole,
         isFallback: true
       };
       setMessages(prev => [...prev, botMsg]);
@@ -236,7 +254,7 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-10">
+        <div className="text-center max-w-3xl mx-auto mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#123D32] border border-[#F2D231]/30 text-[#F2D231] text-xs font-spacemono uppercase tracking-wider mb-4">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Interactive Gemini AI Intelligence</span>
@@ -244,13 +262,85 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
           <h2 className="text-3xl sm:text-4xl font-syne font-extrabold text-white tracking-tight mb-4">
             Ask The <span className="text-[#F2D231]">{brandName} AI</span> Analyst
           </h2>
-          <p className="text-gray-300 font-inter text-sm sm:text-base leading-relaxed">
-            Multi-turn intelligent market reasoning powered by specialized Gemini engines. Calibrate roles between high-speed terminology, general macro spot education, and complex calculus risk modeling.
+          <p className="text-gray-300 font-inter text-sm sm:text-base leading-relaxed mb-6">
+            Multi-turn intelligent market reasoning powered by specialized Gemini engines. Calibrate roles between high-speed terminology, general macro spot education, and quantitative position risk modeling.
           </p>
+
+          {/* Workspace Mode Switcher */}
+          <div className="inline-flex items-center p-1 rounded-xl bg-[#071914] border border-[#F2D231]/30 shadow-lg flex-wrap justify-center gap-1">
+            <button
+              id="workspace-view-both"
+              type="button"
+              onClick={() => setWorkspaceView('both')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-spacemono flex items-center gap-1.5 transition-all cursor-pointer ${
+                workspaceView === 'both'
+                  ? 'bg-[#F2D231] text-black font-bold shadow-sm'
+                  : 'text-gray-300 hover:text-white'
+              }`}
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Dual Workspace</span>
+              <span className="sm:hidden">Dual</span>
+            </button>
+            <button
+              id="workspace-view-chat"
+              type="button"
+              onClick={() => setWorkspaceView('chat')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-spacemono flex items-center gap-1.5 transition-all cursor-pointer ${
+                workspaceView === 'chat'
+                  ? 'bg-[#F2D231] text-black font-bold shadow-sm'
+                  : 'text-gray-300 hover:text-white'
+              }`}
+            >
+              <Bot className="w-3.5 h-3.5" />
+              <span>AI Terminal</span>
+            </button>
+            <button
+              id="workspace-view-calc"
+              type="button"
+              onClick={() => {
+                setWorkspaceView('calculator');
+                setCompanionTab('calculator');
+              }}
+              className={`px-3 py-1.5 rounded-lg text-xs font-spacemono flex items-center gap-1.5 transition-all cursor-pointer ${
+                workspaceView === 'calculator'
+                  ? 'bg-[#F2D231] text-black font-bold shadow-sm'
+                  : 'text-gray-300 hover:text-white'
+              }`}
+            >
+              <Calculator className="w-3.5 h-3.5" />
+              <span>Risk Calculator</span>
+            </button>
+            <button
+              id="workspace-view-journal"
+              type="button"
+              onClick={() => {
+                setWorkspaceView('journal');
+                setCompanionTab('journal');
+              }}
+              className={`px-3 py-1.5 rounded-lg text-xs font-spacemono flex items-center gap-1.5 transition-all cursor-pointer ${
+                workspaceView === 'journal'
+                  ? 'bg-[#F2D231] text-black font-bold shadow-sm'
+                  : 'text-gray-300 hover:text-white'
+              }`}
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>Trade Journal</span>
+            </button>
+          </div>
         </div>
 
-        {/* Terminal Grid */}
-        <div className="max-w-4xl mx-auto bg-[#0d2e26] border border-[#F2D231]/30 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col h-[680px]">
+        {/* Workspace Dual Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          {/* AI Terminal */}
+          <div className={`transition-all duration-200 ${
+            workspaceView === 'calculator' || workspaceView === 'journal'
+              ? 'hidden' 
+              : workspaceView === 'chat' 
+                ? 'col-span-1 lg:col-span-12 max-w-4xl mx-auto w-full' 
+                : 'col-span-1 lg:col-span-7 w-full'
+          }`}>
+            <div className="bg-[#0d2e26] border border-[#F2D231]/30 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col h-[680px]">
           {/* Terminal Control Bar */}
           <div className="bg-[#123D32] border-b border-[#F2D231]/20 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
             {/* Active Role Indicator */}
@@ -502,7 +592,64 @@ export const AiAnalystSection: React.FC<AiAnalystSectionProps> = ({ brandName = 
           </div>
         </div>
       </div>
-    </section>
+
+      {/* Companion Tools: Position Calculator & Trade Journal */}
+      <div className={`transition-all duration-200 ${
+        workspaceView === 'chat' 
+          ? 'hidden' 
+          : workspaceView === 'calculator' || workspaceView === 'journal' 
+            ? 'col-span-1 lg:col-span-12 max-w-2xl mx-auto w-full' 
+            : 'col-span-1 lg:col-span-5 w-full'
+      }`}>
+        {/* Companion Tab Switcher in Dual mode */}
+        {workspaceView === 'both' && (
+          <div className="flex bg-[#071914] p-1 rounded-xl border border-[#F2D231]/20 mb-3 gap-1">
+            <button
+              id="companion-tab-calculator"
+              type="button"
+              onClick={() => setCompanionTab('calculator')}
+              className={`flex-1 py-1.5 rounded-lg text-xs font-spacemono flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                companionTab === 'calculator'
+                  ? 'bg-[#123D32] text-[#F2D231] font-bold border border-[#F2D231]/40 shadow-sm'
+                  : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              <Calculator className="w-3.5 h-3.5" />
+              <span>Position Sizing</span>
+            </button>
+            <button
+              id="companion-tab-journal"
+              type="button"
+              onClick={() => setCompanionTab('journal')}
+              className={`flex-1 py-1.5 rounded-lg text-xs font-spacemono flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                companionTab === 'journal'
+                  ? 'bg-[#123D32] text-[#F2D231] font-bold border border-[#F2D231]/40 shadow-sm'
+                  : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>Trade Journal</span>
+            </button>
+          </div>
+        )}
+
+        {(workspaceView === 'calculator' || (workspaceView === 'both' && companionTab === 'calculator')) && (
+          <PositionSizeCalculator
+            brandName={brandName}
+            onAnalyzeWithAi={(prompt) => handleSend(prompt, 'quant')}
+          />
+        )}
+
+        {(workspaceView === 'journal' || (workspaceView === 'both' && companionTab === 'journal')) && (
+          <SimpleTradeJournal
+            brandName={brandName}
+            onReviewWithAi={(prompt) => handleSend(prompt, 'mentor')}
+          />
+        )}
+      </div>
+    </div>
+  </div>
+</section>
   );
 };
 
@@ -548,7 +695,25 @@ function renderInlineText(str: string) {
 
 function getFallbackText(query: string, role: ChatRoleType, brandName: string): string {
   const q = query.toLowerCase();
+
+  // Special trade journal psychology feedback handler
+  if (role === 'mentor' && (q.includes('trade journal') || q.includes('emotional state') || q.includes('psychology') || q.includes('execution review'))) {
+    return `### 🎓 Trade Psychology & Execution Review (${brandName})
+**Institutional Analysis of Your Journal Log**:
+- **Emotional Consistency**: Logging emotional states (Disciplined vs. FOMO / Hesitant) creates objective awareness. When entering during a high-FOMO impulse, reduce allocated capital by 50% or enforce a mandatory 15-minute chart detachment rule.
+- **Execution vs. Outcome**: In professional trading, a trade where you strictly respected your invalidation and took a calculated stop-loss is an **A+ execution**, even if the PnL is negative. The only true losses are undisciplined trades.
+- **Spot Conviction Protocol**: If trading spot accumulation, never allow intraday noise to shake your conviction on verified macro liquidity pools. Log your takeaways and execute without emotional attachment.`;
+  }
+
   if (role === 'quant') {
+    if (q.includes('position size') || q.includes('quantitative trade analysis') || q.includes('stop loss') || q.includes('risk parameter')) {
+      return `### 📐 Quantitative Trade Evaluation (${brandName})
+**Mathematical Trade Assessment**:
+- **Capital Invariance**: Locking total risk strictly to your defined dollar amount preserves your compounding curve and protects against liquidation cascades.
+- **Spot Discipline**: In spot execution, zero leverage means zero liquidation wicks. You maintain sovereign control over your coins.
+- **Invalidation Principle**: If price crosses your calculated stop level, the market structure hypothesis is invalidated. Exit without emotional hesitation.
+- **Protocol Verdict**: Sizing formula verified. Ensure your orders are resting in verified institutional accumulation pools rather than chasing market momentum.`;
+    }
     return `### 📐 Quantitative Risk Protocol (${brandName})
 - **Account Protection**: Risk is mathematically bounded at 1.5% - 2.0% per trade.
 - **Position Size**: \`Size = (Account Risk Amount) / (Entry - Stop Level)\`.
