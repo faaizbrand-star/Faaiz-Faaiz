@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ArrowRight, Activity, TrendingUp } from 'lucide-react';
+import { Menu, X, ArrowRight, Activity, TrendingUp, Crown } from 'lucide-react';
 import { MarketTickerData } from '../types';
 import { ThemeToggle } from './ThemeToggle';
 
@@ -119,6 +119,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {links.map((link) => {
               const sectionKey = link.href.replace('#', '');
               const isActive = activeSection === sectionKey;
+              const isVip = link.label.toLowerCase().includes('vip');
               return (
                 <a
                   key={link.label}
@@ -127,13 +128,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                     e.preventDefault();
                     handleLinkClick(link.href);
                   }}
-                  className={`px-3.5 py-1.5 text-xs font-medium rounded-full transition-all duration-200 cursor-pointer ${
+                  className={`px-3.5 py-1.5 text-xs font-medium rounded-full transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
                     isActive
                       ? 'bg-white text-emerald-950 font-semibold shadow-sm border border-slate-300 dark:bg-[#1E5747] dark:text-[#F2D231] dark:border-[#F2D231]/30 dark:shadow-[0_0_12px_rgba(242,210,49,0.2)]'
+                      : isVip
+                      ? 'text-amber-600 dark:text-[#F2D231] font-semibold hover:text-amber-700'
                       : 'text-slate-700 hover:text-emerald-950 dark:text-[#D6F0E5] dark:hover:text-[#F2D231]'
                   }`}
                 >
-                  {link.label}
+                  {isVip && <Crown className="w-3.5 h-3.5 text-amber-500 dark:text-[#F2D231]" />}
+                  <span>{link.label}</span>
                 </a>
               );
             })}
@@ -188,19 +192,27 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             <nav className="mt-6 flex flex-col space-y-2">
-              {links.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleLinkClick(link.href);
-                  }}
-                  className="px-4 py-3 rounded-xl text-base font-medium text-slate-800 dark:text-[#D6F0E5] hover:text-amber-700 dark:hover:text-[#F2D231] hover:bg-slate-100 dark:hover:bg-[#194C3D] transition-colors"
-                >
-                  {link.label}
-                </a>
-              ))}
+              {links.map((link) => {
+                const isVip = link.label.toLowerCase().includes('vip');
+                return (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleLinkClick(link.href);
+                    }}
+                    className={`px-4 py-3 rounded-xl text-base font-medium flex items-center justify-between transition-colors ${
+                      isVip
+                        ? 'text-amber-600 dark:text-[#F2D231] font-bold bg-amber-500/10 border border-amber-500/20'
+                        : 'text-slate-800 dark:text-[#D6F0E5] hover:text-amber-700 dark:hover:text-[#F2D231] hover:bg-slate-100 dark:hover:bg-[#194C3D]'
+                    }`}
+                  >
+                    <span>{link.label}</span>
+                    {isVip && <Crown className="w-4 h-4 text-amber-500 dark:text-[#F2D231]" />}
+                  </a>
+                );
+              })}
             </nav>
           </div>
 

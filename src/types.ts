@@ -216,3 +216,29 @@ export interface TradeJournalEntry {
   timestamp: string;
 }
 
+export type VipPostType = 'spot_signal' | 'alpha_alert' | 'market_update' | 'risk_warning';
+export type VipPostStatus = 'active' | 'hit_target' | 'closed' | 'invalidated';
+export type VipTradeDirection = 'SPOT ACCUMULATION' | 'LONG' | 'SHORT';
+
+export interface VipPost {
+  id: string;
+  title: string;
+  symbol: string;
+  type: VipPostType;
+  status: VipPostStatus;
+  direction?: VipTradeDirection;
+  timeframe?: string;
+  entryRange?: string;
+  target1?: string;
+  target2?: string;
+  stopLoss?: string;
+  riskReward?: string;
+  content: string;
+  chartUrl?: string;
+  pinned?: boolean;
+  createdAt: string;
+  updatedAt?: string;
+  author: string;
+  isLocked?: boolean;
+}
+

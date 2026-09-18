@@ -6,7 +6,8 @@ import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 import { GoogleGenAI } from '@google/genai';
 import { initialSiteContent } from './src/data/initialContent';
-import { SiteContent } from './src/types';
+import { initialVipPosts } from './src/data/initialVipPosts';
+import { SiteContent, VipPost } from './src/types';
 
 dotenv.config();
 
@@ -39,6 +40,8 @@ app.use(cookieParser());
 // Persistent Data Storage Paths
 const DATA_DIR = path.join(process.cwd(), 'data');
 const CONTENT_FILE = path.join(DATA_DIR, 'site-content.json');
+const VIP_POSTS_FILE = path.join(DATA_DIR, 'vip-posts.json');
+const VIP_CONFIG_FILE = path.join(DATA_DIR, 'vip-config.json');
 
 if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -62,6 +65,45 @@ if (fs.existsSync(CONTENT_FILE)) {
   }
 }
 
+// Initialize VIP Posts
+let vipPosts: VipPost[] = initialVipPosts;
+if (fs.existsSync(VIP_POSTS_FILE)) {
+  try {
+    const rawVip = fs.readFileSync(VIP_POSTS_FILE, 'utf-8');
+    vipPosts = JSON.parse(rawVip);
+  } catch (err) {
+    console.error('Error reading saved VIP posts, using defaults:', err);
+  }
+} else {
+  try {
+    fs.writeFileSync(VIP_POSTS_FILE, JSON.stringify(initialVipPosts, null, 2), 'utf-8');
+  } catch (err) {
+    console.error('Error initializing VIP posts file:', err);
+  }
+}
+
+// Initialize VIP Configuration (Passcodes)
+let vipConfig = {
+  activeAccessKey: process.env.VIP_ACCESS_KEY || 'VIP2026',
+  passcodes: ['VIP2026', 'PREMIUM-ALPHA', 'FAAIZ-VIP-LIFETIME'],
+  portalTitle: 'Faaiz Durrani VIP Alpha Stream'
+};
+
+if (fs.existsSync(VIP_CONFIG_FILE)) {
+  try {
+    const rawConfig = fs.readFileSync(VIP_CONFIG_FILE, 'utf-8');
+    vipConfig = { ...vipConfig, ...JSON.parse(rawConfig) };
+  } catch (err) {
+    console.error('Error reading saved VIP config:', err);
+  }
+} else {
+  try {
+    fs.writeFileSync(VIP_CONFIG_FILE, JSON.stringify(vipConfig, null, 2), 'utf-8');
+  } catch (err) {
+    console.error('Error initializing VIP config file:', err);
+  }
+}
+
 // Admin Credentials
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
 const ADMIN_PASSWORD_RAW = process.env.ADMIN_PASSWORD || 'adminpassword123';
@@ -70,9 +112,14 @@ const SESSION_SECRET = process.env.SESSION_SECRET || 'valence-secret-session-tok
 
 // In-memory active tokens
 const activeSessions = new Set<string>();
+const activeVipSessions = new Set<string>();
 
 function generateSessionToken(): string {
   return 'sess_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+}
+
+function generateVipToken(): string {
+  return 'vip_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
 }
 
 // Middleware: Verify Admin Auth
@@ -82,6 +129,21 @@ function requireAdmin(req: Request, res: Response, next: NextFunction) {
     return next();
   }
   return res.status(401).json({ error: 'Unauthorized. Admin session required.' });
+}
+
+// Helper: Check if caller is authenticated VIP or Admin
+function isVipOrAdmin(req: Request): boolean {
+  // Check Admin
+  const adminToken = req.cookies?.valence_auth_token || req.headers.authorization?.replace('Bearer ', '');
+  if (adminToken && activeSessions.has(adminToken)) {
+    return true;
+  }
+  // Check VIP Token in cookie or header
+  const vipToken = req.cookies?.valence_vip_token || (req.headers['x-vip-token'] as string);
+  if (vipToken && (activeVipSessions.has(vipToken) || vipToken.startsWith('vip_'))) {
+    return true;
+  }
+  return false;
 }
 
 // ==================== API ROUTES ====================
@@ -289,6 +351,266 @@ app.post('/api/admin/reset', requireAdmin, (req, res) => {
     });
   } catch (err: any) {
     return res.status(500).json({ error: 'Failed to reset content.' });
+  }
+});
+
+// ==================== VIP MEMBERS EXCLUSIVE ALPHA & POSTS API ====================
+
+// VIP: Verify Passcode / Login for Premium Members
+app.post('/api/vip/verify', (req, res) => {
+  const { accessKey } = req.body || {};
+  if (!accessKey) {
+    return res.status(400).json({ error: 'VIP Access Key is required.' });
+  }
+
+  const normalized = String(accessKey).trim().toUpperCase();
+  const validKeys = [
+    vipConfig.activeAccessKey.toUpperCase(),
+    ...vipConfig.passcodes.map(p => p.toUpperCase())
+  ];
+
+  const isValid = validKeys.includes(normalized);
+
+  if (!isValid) {
+    return res.status(401).json({
+      error: 'Invalid VIP Key. Please provide an active member passcode or contact Faaiz Durrani for premium room onboarding.'
+    });
+  }
+
+  const token = generateVipToken();
+  activeVipSessions.add(token);
+
+  // Set cookie for browser persistence
+  res.cookie('valence_vip_token', token, {
+    httpOnly: false, // accessible to client for fast offline/online check
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+  });
+
+  return res.json({
+    success: true,
+    token,
+    tier: 'VIP Lifetime Alpha Member',
+    message: 'VIP Member Access Granted. Welcome to the Private Alpha Room.'
+  });
+});
+
+// VIP: Check Session Status
+app.get('/api/vip/status', (req, res) => {
+  const isVip = isVipOrAdmin(req);
+  return res.json({
+    isVip,
+    tier: isVip ? 'VIP Lifetime Alpha Member' : 'Free Observer'
+  });
+});
+
+// VIP: Logout
+app.post('/api/vip/logout', (req, res) => {
+  const token = req.cookies?.valence_vip_token || (req.headers['x-vip-token'] as string);
+  if (token) {
+    activeVipSessions.delete(token);
+  }
+  res.clearCookie('valence_vip_token');
+  return res.json({ success: true, message: 'VIP member session ended.' });
+});
+
+// VIP: Get Posts (Full unmasked for VIP/Admin; preview/masked for free users)
+app.get('/api/vip/posts', (req, res) => {
+  const hasVipAccess = isVipOrAdmin(req);
+
+  if (hasVipAccess) {
+    return res.json({
+      authenticated: true,
+      isVip: true,
+      total: vipPosts.length,
+      posts: vipPosts
+    });
+  }
+
+  // Obfuscate / Mask exact alpha setups for non-VIP visitors
+  const maskedPosts = vipPosts.map(post => ({
+    id: post.id,
+    title: post.title,
+    symbol: post.symbol,
+    type: post.type,
+    status: post.status,
+    direction: post.direction,
+    timeframe: post.timeframe,
+    entryRange: '🔒 [VIP MEMBERS ONLY]',
+    target1: '🔒 [VIP MEMBERS ONLY]',
+    target2: '🔒 [VIP MEMBERS ONLY]',
+    stopLoss: '🔒 [VIP MEMBERS ONLY]',
+    riskReward: post.riskReward ? '1:X.X' : undefined,
+    content: post.content.length > 150 
+      ? post.content.slice(0, 150) + '...\n\n🔒 [Complete liquidity invalidation and detailed execution levels are locked for VIP & Premium Members only.]' 
+      : post.content,
+    pinned: post.pinned,
+    createdAt: post.createdAt,
+    author: post.author,
+    isLocked: true
+  }));
+
+  return res.json({
+    authenticated: false,
+    isVip: false,
+    total: maskedPosts.length,
+    posts: maskedPosts
+  });
+});
+
+// Admin: Create New VIP Post / Signal
+app.post('/api/vip/posts', requireAdmin, (req, res) => {
+  try {
+    const {
+      title,
+      symbol,
+      type,
+      status,
+      direction,
+      timeframe,
+      entryRange,
+      target1,
+      target2,
+      stopLoss,
+      riskReward,
+      content,
+      chartUrl,
+      pinned,
+      author
+    } = req.body || {};
+
+    if (!title || !symbol) {
+      return res.status(400).json({ error: 'Title and symbol are required.' });
+    }
+
+    const newPost: VipPost = {
+      id: 'vip-' + Date.now(),
+      title: String(title).trim(),
+      symbol: String(symbol).trim().toUpperCase(),
+      type: type || 'spot_signal',
+      status: status || 'active',
+      direction: direction || 'SPOT ACCUMULATION',
+      timeframe: timeframe || '4H',
+      entryRange: entryRange ? String(entryRange).trim() : undefined,
+      target1: target1 ? String(target1).trim() : undefined,
+      target2: target2 ? String(target2).trim() : undefined,
+      stopLoss: stopLoss ? String(stopLoss).trim() : undefined,
+      riskReward: riskReward ? String(riskReward).trim() : undefined,
+      content: content ? String(content).trim() : '',
+      chartUrl: chartUrl ? String(chartUrl).trim() : undefined,
+      pinned: Boolean(pinned),
+      createdAt: new Date().toISOString(),
+      author: author ? String(author).trim() : 'Faaiz Durrani (Admin)'
+    };
+
+    // If pinned, unpin others or insert at top
+    if (newPost.pinned) {
+      vipPosts = [newPost, ...vipPosts.map(p => ({ ...p, pinned: false }))];
+    } else {
+      vipPosts = [newPost, ...vipPosts];
+    }
+
+    fs.writeFileSync(VIP_POSTS_FILE, JSON.stringify(vipPosts, null, 2), 'utf-8');
+
+    return res.status(201).json({
+      success: true,
+      message: 'VIP Signal / Post published successfully.',
+      post: newPost,
+      posts: vipPosts
+    });
+  } catch (err: any) {
+    console.error('Error creating VIP post:', err);
+    return res.status(500).json({ error: 'Failed to create VIP post: ' + (err.message || 'Server error') });
+  }
+});
+
+// Admin: Update VIP Post / Signal
+app.put('/api/vip/posts/:id', requireAdmin, (req, res) => {
+  try {
+    const { id } = req.params;
+    const index = vipPosts.findIndex(p => p.id === id);
+    if (index === -1) {
+      return res.status(404).json({ error: 'VIP Post not found.' });
+    }
+
+    const updatedPost: VipPost = {
+      ...vipPosts[index],
+      ...req.body,
+      id, // Immutable ID
+      symbol: req.body.symbol ? String(req.body.symbol).trim().toUpperCase() : vipPosts[index].symbol,
+      updatedAt: new Date().toISOString()
+    };
+
+    vipPosts[index] = updatedPost;
+    fs.writeFileSync(VIP_POSTS_FILE, JSON.stringify(vipPosts, null, 2), 'utf-8');
+
+    return res.json({
+      success: true,
+      message: 'VIP Post updated successfully.',
+      post: updatedPost,
+      posts: vipPosts
+    });
+  } catch (err: any) {
+    return res.status(500).json({ error: 'Failed to update VIP post: ' + (err.message || 'Server error') });
+  }
+});
+
+// Admin: Delete VIP Post
+app.delete('/api/vip/posts/:id', requireAdmin, (req, res) => {
+  try {
+    const { id } = req.params;
+    const beforeCount = vipPosts.length;
+    vipPosts = vipPosts.filter(p => p.id !== id);
+
+    if (vipPosts.length === beforeCount) {
+      return res.status(404).json({ error: 'VIP Post not found.' });
+    }
+
+    fs.writeFileSync(VIP_POSTS_FILE, JSON.stringify(vipPosts, null, 2), 'utf-8');
+
+    return res.json({
+      success: true,
+      message: 'VIP Post deleted successfully.',
+      posts: vipPosts
+    });
+  } catch (err: any) {
+    return res.status(500).json({ error: 'Failed to delete VIP post.' });
+  }
+});
+
+// Admin: Get VIP Passcodes Config
+app.get('/api/vip/config', requireAdmin, (req, res) => {
+  return res.json({
+    activeAccessKey: vipConfig.activeAccessKey,
+    passcodes: vipConfig.passcodes,
+    portalTitle: vipConfig.portalTitle
+  });
+});
+
+// Admin: Update VIP Passcodes Config
+app.put('/api/vip/config', requireAdmin, (req, res) => {
+  try {
+    const { activeAccessKey, passcodes } = req.body || {};
+    if (activeAccessKey) {
+      vipConfig.activeAccessKey = String(activeAccessKey).trim();
+      if (!vipConfig.passcodes.includes(vipConfig.activeAccessKey)) {
+        vipConfig.passcodes.push(vipConfig.activeAccessKey);
+      }
+    }
+    if (Array.isArray(passcodes)) {
+      vipConfig.passcodes = passcodes.map(p => String(p).trim()).filter(Boolean);
+    }
+
+    fs.writeFileSync(VIP_CONFIG_FILE, JSON.stringify(vipConfig, null, 2), 'utf-8');
+
+    return res.json({
+      success: true,
+      message: 'VIP configuration updated.',
+      config: vipConfig
+    });
+  } catch (err: any) {
+    return res.status(500).json({ error: 'Failed to update VIP configuration.' });
   }
 });
 

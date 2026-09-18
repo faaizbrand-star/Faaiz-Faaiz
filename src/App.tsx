@@ -5,6 +5,7 @@ import { Preloader } from './components/Preloader';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { PerformanceSection } from './components/PerformanceSection';
+import { VipSignalsSection } from './components/VipSignalsSection';
 import { MembershipPlans } from './components/MembershipPlans';
 import { AiAnalystSection } from './components/AiAnalystSection';
 import { WhyUsSection } from './components/WhyUsSection';
@@ -165,7 +166,7 @@ export default function App() {
   useEffect(() => {
     if (currentRoute !== 'public') return;
 
-    const sections = ['hero', 'results', 'plans', 'why-us', 'live-chart', 'founder', 'faq'];
+    const sections = ['hero', 'results', 'vip-signals', 'plans', 'why-us', 'live-chart', 'founder', 'faq'];
 
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 200;
@@ -258,6 +259,11 @@ export default function App() {
       {/* 4. Results / Performance Section with Top 3 Ranking & Table */}
       <PerformanceSection
         performanceData={content.performance}
+      />
+
+      {/* 4.5 Exclusive VIP Member Signals & Posts Feed */}
+      <VipSignalsSection
+        onOpenMembership={handleOpenApplication}
       />
 
       {/* 5. Membership Plans with 3 Tiers (Monthly, Yearly, Lifetime) */}
