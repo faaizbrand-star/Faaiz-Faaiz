@@ -432,7 +432,7 @@ app.get('/api/vip/posts', (req, res) => {
   const maskedPosts = vipPosts.map(post => ({
     id: post.id,
     title: post.title,
-    symbol: post.symbol,
+    symbol: post.symbol || 'VIP ALPHA',
     type: post.type,
     status: post.status,
     direction: post.direction,
@@ -442,9 +442,15 @@ app.get('/api/vip/posts', (req, res) => {
     target2: '🔒 [VIP MEMBERS ONLY]',
     stopLoss: '🔒 [VIP MEMBERS ONLY]',
     riskReward: post.riskReward ? '1:X.X' : undefined,
-    content: post.content.length > 150 
-      ? post.content.slice(0, 150) + '...\n\n🔒 [Complete liquidity invalidation and detailed execution levels are locked for VIP & Premium Members only.]' 
-      : post.content,
+    content: (post.content || post.body || '').length > 150 
+      ? (post.content || post.body || '').slice(0, 150) + '...\n\n🔒 [Complete liquidity invalidation, detailed execution levels, and attachments are locked for VIP & Premium Members only.]' 
+      : (post.content || post.body || ''),
+    body: (post.content || post.body || '').length > 150 
+      ? (post.content || post.body || '').slice(0, 150) + '...\n\n🔒 [Locked for VIP Members]'
+      : (post.content || post.body || ''),
+    attachmentUrl: undefined,
+    linkUrl: undefined,
+    linkText: post.linkText ? '🔒 [Locked VIP Link]' : undefined,
     pinned: post.pinned,
     createdAt: post.createdAt,
     author: post.author,
@@ -459,13 +465,47 @@ app.get('/api/vip/posts', (req, res) => {
   });
 });
 
-// Admin: Create New VIP Post / Signal
-app.post('/api/vip/posts', requireAdmin, (req, res) => {
+// Alias: /api/vip/updates GET
+app.get('/api/vip/updates', (req, res) => {
+  const hasVipAccess = isVipOrAdmin(req);
+  if (hasVipAccess) {
+    return res.json({
+      authenticated: true,
+      isVip: true,
+      total: vipPosts.length,
+      updates: vipPosts,
+      posts: vipPosts
+    });
+  }
+  const maskedPosts = vipPosts.map(post => ({
+    id: post.id,
+    title: post.title,
+    symbol: post.symbol || 'VIP ALPHA',
+    type: post.type,
+    content: (post.content || post.body || '').slice(0, 120) + '... 🔒 [VIP Access Required]',
+    body: (post.content || post.body || '').slice(0, 120) + '... 🔒 [VIP Access Required]',
+    pinned: post.pinned,
+    createdAt: post.createdAt,
+    author: post.author,
+    isLocked: true
+  }));
+  return res.json({
+    authenticated: false,
+    isVip: false,
+    total: maskedPosts.length,
+    updates: maskedPosts,
+    posts: maskedPosts
+  });
+});
+
+// Admin: Create New VIP Post / Update
+const handleCreateVipPost = (req: Request, res: Response) => {
   try {
     const {
       title,
       symbol,
       type,
+      category,
       status,
       direction,
       timeframe,
@@ -475,30 +515,46 @@ app.post('/api/vip/posts', requireAdmin, (req, res) => {
       stopLoss,
       riskReward,
       content,
+      body,
+      attachmentUrl,
+      linkUrl,
+      linkText,
       chartUrl,
       pinned,
       author
     } = req.body || {};
 
-    if (!title || !symbol) {
-      return res.status(400).json({ error: 'Title and symbol are required.' });
+    if (!title || !title.trim()) {
+      return res.status(400).json({ error: 'Title is required for VIP posts.' });
     }
+
+    const mainBody = (body !== undefined && body !== null ? String(body) : (content !== undefined && content !== null ? String(content) : '')).trim();
+    if (!mainBody) {
+      return res.status(400).json({ error: 'Body/content is required for VIP posts.' });
+    }
+
+    const rawAttachment = attachmentUrl || linkUrl || chartUrl;
+    const finalAttachment = rawAttachment ? String(rawAttachment).trim() : undefined;
 
     const newPost: VipPost = {
       id: 'vip-' + Date.now(),
       title: String(title).trim(),
-      symbol: String(symbol).trim().toUpperCase(),
-      type: type || 'spot_signal',
+      symbol: symbol ? String(symbol).trim().toUpperCase() : 'VIP ALPHA',
+      type: type || category || 'market_update',
       status: status || 'active',
       direction: direction || 'SPOT ACCUMULATION',
-      timeframe: timeframe || '4H',
+      timeframe: timeframe ? String(timeframe).trim() : '4H',
       entryRange: entryRange ? String(entryRange).trim() : undefined,
       target1: target1 ? String(target1).trim() : undefined,
       target2: target2 ? String(target2).trim() : undefined,
       stopLoss: stopLoss ? String(stopLoss).trim() : undefined,
       riskReward: riskReward ? String(riskReward).trim() : undefined,
-      content: content ? String(content).trim() : '',
-      chartUrl: chartUrl ? String(chartUrl).trim() : undefined,
+      content: mainBody,
+      body: mainBody,
+      attachmentUrl: finalAttachment,
+      linkUrl: finalAttachment,
+      linkText: linkText ? String(linkText).trim() : undefined,
+      chartUrl: finalAttachment,
       pinned: Boolean(pinned),
       createdAt: new Date().toISOString(),
       author: author ? String(author).trim() : 'Faaiz Durrani (Admin)'
@@ -515,18 +571,22 @@ app.post('/api/vip/posts', requireAdmin, (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: 'VIP Signal / Post published successfully.',
+      message: 'VIP Post / Update published successfully.',
       post: newPost,
+      update: newPost,
       posts: vipPosts
     });
   } catch (err: any) {
     console.error('Error creating VIP post:', err);
     return res.status(500).json({ error: 'Failed to create VIP post: ' + (err.message || 'Server error') });
   }
-});
+};
 
-// Admin: Update VIP Post / Signal
-app.put('/api/vip/posts/:id', requireAdmin, (req, res) => {
+app.post('/api/vip/posts', requireAdmin, handleCreateVipPost);
+app.post('/api/vip/updates', requireAdmin, handleCreateVipPost);
+
+// Admin: Update VIP Post / Update
+const handleUpdateVipPost = (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const index = vipPosts.findIndex(p => p.id === id);
@@ -534,11 +594,56 @@ app.put('/api/vip/posts/:id', requireAdmin, (req, res) => {
       return res.status(404).json({ error: 'VIP Post not found.' });
     }
 
+    const {
+      title,
+      symbol,
+      type,
+      category,
+      status,
+      direction,
+      timeframe,
+      entryRange,
+      target1,
+      target2,
+      stopLoss,
+      riskReward,
+      content,
+      body,
+      attachmentUrl,
+      linkUrl,
+      linkText,
+      chartUrl,
+      pinned,
+      author
+    } = req.body || {};
+
+    const existing = vipPosts[index];
+    const mainBody = body !== undefined ? String(body).trim() : (content !== undefined ? String(content).trim() : existing.content);
+    const rawAttachment = attachmentUrl !== undefined ? attachmentUrl : (linkUrl !== undefined ? linkUrl : chartUrl);
+    const finalAttachment = rawAttachment !== undefined ? (rawAttachment ? String(rawAttachment).trim() : undefined) : existing.attachmentUrl;
+
     const updatedPost: VipPost = {
-      ...vipPosts[index],
-      ...req.body,
+      ...existing,
       id, // Immutable ID
-      symbol: req.body.symbol ? String(req.body.symbol).trim().toUpperCase() : vipPosts[index].symbol,
+      title: title !== undefined ? String(title).trim() : existing.title,
+      symbol: symbol !== undefined ? (symbol ? String(symbol).trim().toUpperCase() : 'VIP ALPHA') : existing.symbol,
+      type: (type || category || existing.type) as any,
+      status: status !== undefined ? status : existing.status,
+      direction: direction !== undefined ? direction : existing.direction,
+      timeframe: timeframe !== undefined ? String(timeframe).trim() : existing.timeframe,
+      entryRange: entryRange !== undefined ? String(entryRange).trim() : existing.entryRange,
+      target1: target1 !== undefined ? String(target1).trim() : existing.target1,
+      target2: target2 !== undefined ? String(target2).trim() : existing.target2,
+      stopLoss: stopLoss !== undefined ? String(stopLoss).trim() : existing.stopLoss,
+      riskReward: riskReward !== undefined ? String(riskReward).trim() : existing.riskReward,
+      content: mainBody,
+      body: mainBody,
+      attachmentUrl: finalAttachment,
+      linkUrl: finalAttachment,
+      linkText: linkText !== undefined ? (linkText ? String(linkText).trim() : undefined) : existing.linkText,
+      chartUrl: finalAttachment,
+      pinned: pinned !== undefined ? Boolean(pinned) : existing.pinned,
+      author: author !== undefined ? String(author).trim() : existing.author,
       updatedAt: new Date().toISOString()
     };
 
@@ -547,17 +652,21 @@ app.put('/api/vip/posts/:id', requireAdmin, (req, res) => {
 
     return res.json({
       success: true,
-      message: 'VIP Post updated successfully.',
+      message: 'VIP Post / Update updated successfully.',
       post: updatedPost,
+      update: updatedPost,
       posts: vipPosts
     });
   } catch (err: any) {
     return res.status(500).json({ error: 'Failed to update VIP post: ' + (err.message || 'Server error') });
   }
-});
+};
 
-// Admin: Delete VIP Post
-app.delete('/api/vip/posts/:id', requireAdmin, (req, res) => {
+app.put('/api/vip/posts/:id', requireAdmin, handleUpdateVipPost);
+app.put('/api/vip/updates/:id', requireAdmin, handleUpdateVipPost);
+
+// Admin: Delete VIP Post / Update
+const handleDeleteVipPost = (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const beforeCount = vipPosts.length;
@@ -571,13 +680,16 @@ app.delete('/api/vip/posts/:id', requireAdmin, (req, res) => {
 
     return res.json({
       success: true,
-      message: 'VIP Post deleted successfully.',
+      message: 'VIP Post / Update deleted successfully.',
       posts: vipPosts
     });
   } catch (err: any) {
     return res.status(500).json({ error: 'Failed to delete VIP post.' });
   }
-});
+};
+
+app.delete('/api/vip/posts/:id', requireAdmin, handleDeleteVipPost);
+app.delete('/api/vip/updates/:id', requireAdmin, handleDeleteVipPost);
 
 // Admin: Get VIP Passcodes Config
 app.get('/api/vip/config', requireAdmin, (req, res) => {

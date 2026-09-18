@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { SiteContent, PerformanceAsset, PricingPlan, FAQItem } from '../../types';
 import { AdminVipTab } from './AdminVipTab';
+import { AdminVipContentEditorTab } from './AdminVipContentEditorTab';
 
 interface AdminDashboardProps {
   initialContent: SiteContent;
@@ -15,6 +16,7 @@ interface AdminDashboardProps {
 
 type TabType =
   | 'overview'
+  | 'vipContentEditor'
   | 'vipPosts'
   | 'hero'
   | 'stats'
@@ -104,7 +106,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   // Tab definitions
   const tabs = [
     { id: 'overview', label: 'Overview', icon: Globe },
-    { id: 'vipPosts', label: 'VIP Signals & Posts', icon: Crown },
+    { id: 'vipContentEditor', label: 'VIP Content Editor', icon: Crown },
     { id: 'hero', label: 'Hero & Branding', icon: Terminal },
     { id: 'stats', label: 'Statistics', icon: BarChart2 },
     { id: 'performance', label: 'Performance / Results', icon: Activity },
@@ -303,9 +305,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </div>
           )}
 
-          {/* TAB: VIP POSTS & SIGNALS */}
-          {activeTab === 'vipPosts' && (
-            <AdminVipTab />
+          {/* TAB: VIP CONTENT EDITOR */}
+          {(activeTab === 'vipContentEditor' || activeTab === 'vipPosts') && (
+            <AdminVipContentEditorTab />
           )}
 
           {/* TAB: HERO */}
