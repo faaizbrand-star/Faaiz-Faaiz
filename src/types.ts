@@ -184,3 +184,18 @@ export interface ContactSubmission {
   createdAt: string;
   status: 'new' | 'reviewed' | 'contacted';
 }
+
+export type ChatRoleType = 'mentor' | 'quant' | 'explainer';
+export type TaskComplexity = 'fast' | 'general' | 'complex';
+
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'model';
+  text: string;
+  timestamp: string;
+  modelUsed?: string;
+  roleId?: string;
+  isError?: boolean;
+  isFallback?: boolean;
+}
+

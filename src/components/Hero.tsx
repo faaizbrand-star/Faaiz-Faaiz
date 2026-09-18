@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, ShieldCheck, TrendingUp, CheckCircle, Flame, ExternalLink } from 'lucide-react';
+import { ArrowRight, ShieldCheck, TrendingUp, CheckCircle, Flame, ExternalLink, Sparkles } from 'lucide-react';
 import { SiteContent, MarketTickerData } from '../types';
 import { HeroTerminal } from './HeroTerminal';
 
@@ -60,11 +60,19 @@ export const Hero: React.FC<HeroProps> = ({
               </button>
 
               <a
-                href="#results"
-                className="inline-flex items-center justify-center gap-2 px-6 py-4 text-xs sm:text-sm font-medium tracking-wide text-[#EFFAF5] bg-[#194C3D]/80 hover:bg-[#1E5747] border border-[#F2D231]/30 hover:border-[#F2D231] rounded-xl transition-all duration-200 cursor-pointer"
+                href="#ai-analyst"
+                className="inline-flex items-center justify-center gap-2 px-6 py-4 text-xs sm:text-sm font-medium tracking-wide text-[#F2D231] bg-[#194C3D]/80 hover:bg-[#1E5747] border border-[#F2D231]/40 hover:border-[#F2D231] rounded-xl transition-all duration-200 cursor-pointer"
               >
-                <TrendingUp className="w-4 h-4 text-[#F2D231]" />
-                <span>View 30-Day Spot Results</span>
+                <Sparkles className="w-4 h-4 text-[#F2D231]" />
+                <span>Ask AI Analyst</span>
+              </a>
+
+              <a
+                href="#results"
+                className="inline-flex items-center justify-center gap-2 px-5 py-4 text-xs sm:text-sm font-medium tracking-wide text-[#EFFAF5] bg-[#194C3D]/40 hover:bg-[#1E5747] border border-white/10 hover:border-[#F2D231]/40 rounded-xl transition-all duration-200 cursor-pointer"
+              >
+                <TrendingUp className="w-4 h-4 text-gray-400" />
+                <span>Spot Results</span>
               </a>
             </div>
 

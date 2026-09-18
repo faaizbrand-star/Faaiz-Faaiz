@@ -16,6 +16,7 @@ export const initialSiteContent: SiteContent = {
       { label: "Home", href: "#hero" },
       { label: "Results", href: "#results" },
       { label: "Plans", href: "#membership" },
+      { label: "AI Analyst", href: "#ai-analyst" },
       { label: "Why Us", href: "#why-us" },
       { label: "Live Chart", href: "#live-chart" },
       { label: "About", href: "#founder" },

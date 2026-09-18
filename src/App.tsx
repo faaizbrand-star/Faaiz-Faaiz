@@ -6,15 +6,17 @@ import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { PerformanceSection } from './components/PerformanceSection';
 import { MembershipPlans } from './components/MembershipPlans';
+import { AiAnalystSection } from './components/AiAnalystSection';
 import { WhyUsSection } from './components/WhyUsSection';
 import { LiveMarketSection } from './components/LiveMarketSection';
 import { FounderSection } from './components/FounderSection';
 import { FAQSection } from './components/FAQSection';
 import { Footer } from './components/Footer';
 import { ApplicationModal } from './components/ApplicationModal';
+import { GeminiChatbot } from './components/GeminiChatbot';
 import { AdminLogin } from './components/admin/AdminLogin';
 import { AdminDashboard } from './components/admin/AdminDashboard';
-import { Lock } from 'lucide-react';
+import { Lock, Bot } from 'lucide-react';
 
 export default function App() {
   const [content, setContent] = useState<SiteContent>(initialSiteContent);
@@ -24,6 +26,7 @@ export default function App() {
   const [currentRoute, setCurrentRoute] = useState<'public' | 'admin'>('public');
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [selectedPlanTier, setSelectedPlanTier] = useState('Core Foundation');
 
   // Detect route on initial load and handle popstate
@@ -223,13 +226,19 @@ export default function App() {
         onSelectPlan={(planName) => handleOpenApplication(planName)}
       />
 
-      {/* 6. Why Choose Us (The Difference) */}
+      {/* 6. Interactive Gemini AI Analyst Terminal */}
+      <AiAnalystSection
+        brandName={content.siteConfig.brandName}
+        onOpenApplication={handleOpenApplication}
+      />
+
+      {/* 7. Why Choose Us (The Difference) */}
       <WhyUsSection
         whyUsData={content.whyUs}
         onOpenApplication={handleOpenApplication}
       />
 
-      {/* 7. Live Market Section (Candlestick / Line terminal) */}
+      {/* 8. Live Market Section (Candlestick / Line terminal) */}
       <LiveMarketSection
         liveChartData={content.liveChart}
         tickerData={tickerData}
@@ -240,23 +249,30 @@ export default function App() {
         }}
       />
 
-      {/* 8. Founder & Trust Narrative (Faaiz Durrani) */}
+      {/* 9. Founder & Trust Narrative (Faaiz Durrani) */}
       <FounderSection
         founderData={content.founder}
       />
 
-      {/* 9. FAQ Section */}
+      {/* 10. FAQ Section */}
       <FAQSection
         faqData={content.faq}
       />
 
-      {/* 10. Final Call to Action & Global Footer */}
+      {/* 11. Final Call to Action & Global Footer */}
       <Footer
         footerData={content.footer}
         ctaData={content.ctaSection}
         brandName={content.siteConfig.brandName}
         onOpenApplication={() => handleOpenApplication('Yearly VIP')}
         onNavigateAdmin={navigateToAdmin}
+      />
+
+      {/* Multi-turn Gemini AI Chatbot Modal */}
+      <GeminiChatbot
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+        brandName={content.siteConfig.brandName}
       />
 
       {/* Cohort Application / Contact Modal */}
@@ -266,6 +282,21 @@ export default function App() {
         selectedTier={selectedPlanTier}
         brandName={content.siteConfig.brandName}
       />
+
+      {/* Floating Gemini Chat Launcher Button */}
+      <div className="fixed bottom-4 right-16 sm:right-20 z-30">
+        <button
+          id="floating-gemini-chat-btn"
+          onClick={() => setIsChatOpen(true)}
+          className="group flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#F2D231] hover:bg-[#FFE873] active:bg-[#D4B22A] text-[#123D32] font-syne font-bold text-xs uppercase tracking-wider shadow-[0_8px_25px_rgba(242,210,49,0.4)] border border-white/40 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
+          title="Ask Faaiz AI Market Assistant"
+          aria-label="Open Gemini AI Assistant"
+        >
+          <Bot className="w-4 h-4 text-[#123D32] group-hover:scale-110 transition-transform" />
+          <span className="hidden sm:inline">Ask Faaiz AI</span>
+          <span className="w-2 h-2 rounded-full bg-emerald-700 animate-pulse" />
+        </button>
+      </div>
 
       {/* Discreet floating admin key pill (bottom right edge) */}
       <aside aria-label="Portal administration access" className="fixed bottom-4 right-4 z-30">
