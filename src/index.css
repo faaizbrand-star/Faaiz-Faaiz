@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --gold: #F2D231;
+    --gold2: #D4B22A;
+    --gold3: #FFE873;
+    --dark: #EFFAF5;
+    --white: #123D32; /* Deep emerald dark background */
+    --off: #194C3D;
+    --surface: #1E5747;
+    --border: rgba(242, 210, 49, .2);
+    --border-strong: rgba(242, 210, 49, .38);
+    --text: #D6F0E5;
+    --muted: #BFE5D5;
+    --red: #E08888;
+    --green: #5FC98A;
+    --blue: #7EC8E3;
+    --lavender: #B7A9F5;
+    --solid-dark: #0D2B23;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #123D32;
+    color: #D6F0E5;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom Typography Utility Classes matching FaaizDurrani */
+.font-serif-italic {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.font-display {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+.font-spacemono {
+  font-family: 'Space Mono', monospace;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.brand-accent {
+  color: #F2D231;
+  font-style: italic;
+  font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+}
+
+/* Glowing Pulsing Amber / Gold Dot */
+.edot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #F2D231;
+  box-shadow: 0 0 8px #F2D231;
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
+}
+
+/* Background Texture matching luxury dark green */
+.bg-grid-pattern {
+  background-size: 36px 36px;
+  background-image: 
+    linear-gradient(to right, rgba(242, 210, 49, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(242, 210, 49, 0.04) 1px, transparent 1px);
+}
+
+.hero-accent-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #F2D231, #D4B22A, transparent);
+}
+
+/* Gold glow shadows */
+.glow-gold {
+  box-shadow: 0 0 35px -5px rgba(242, 210, 49, 0.25);
+}
+
+.glow-gold-sm {
+  box-shadow: 0 0 16px -2px rgba(242, 210, 49, 0.3);
+}
+
+/* Custom modern sleek scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0E2E25;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1E5747;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #D4B22A;
+}

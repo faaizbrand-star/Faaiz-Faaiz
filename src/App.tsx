@@ -1,0 +1,260 @@
+import React, { useState, useEffect } from 'react';
+import { initialSiteContent } from './data/initialContent';
+import { SiteContent, MarketTickerData } from './types';
+import { Preloader } from './components/Preloader';
+import { Navbar } from './components/Navbar';
+import { Hero } from './components/Hero';
+import { PerformanceSection } from './components/PerformanceSection';
+import { MembershipPlans } from './components/MembershipPlans';
+import { WhyUsSection } from './components/WhyUsSection';
+import { LiveMarketSection } from './components/LiveMarketSection';
+import { FounderSection } from './components/FounderSection';
+import { FAQSection } from './components/FAQSection';
+import { Footer } from './components/Footer';
+import { ApplicationModal } from './components/ApplicationModal';
+import { AdminLogin } from './components/admin/AdminLogin';
+import { AdminDashboard } from './components/admin/AdminDashboard';
+import { Lock } from 'lucide-react';
+
+export default function App() {
+  const [content, setContent] = useState<SiteContent>(initialSiteContent);
+  const [tickerData, setTickerData] = useState<MarketTickerData | null>(null);
+  const [activeSection, setActiveSection] = useState<string>('hero');
+  const [preloaderDone, setPreloaderDone] = useState(false);
+  const [currentRoute, setCurrentRoute] = useState<'public' | 'admin'>('public');
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+  const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
+  const [selectedPlanTier, setSelectedPlanTier] = useState('Core Foundation');
+
+  // Detect route on initial load and handle popstate
+  useEffect(() => {
+    const checkRoute = () => {
+      const path = window.location.pathname;
+      const hash = window.location.hash;
+      const search = window.location.search;
+      if (path === '/admin' || hash === '#admin' || search.includes('view=admin')) {
+        setCurrentRoute('admin');
+      } else {
+        setCurrentRoute('public');
+      }
+    };
+
+    checkRoute();
+    window.addEventListener('popstate', checkRoute);
+    window.addEventListener('hashchange', checkRoute);
+    return () => {
+      window.removeEventListener('popstate', checkRoute);
+      window.removeEventListener('hashchange', checkRoute);
+    };
+  }, []);
+
+  // Fetch initial content from backend API
+  useEffect(() => {
+    fetch('/api/content')
+      .then(res => res.json())
+      .then(json => {
+        if (json?.data) {
+          setContent(json.data);
+        }
+      })
+      .catch(err => {
+        console.warn('Using local fallback content:', err);
+      });
+  }, []);
+
+  // Check admin session status
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then(res => res.json())
+      .then(json => {
+        if (json?.authenticated) {
+          setIsAdminAuthenticated(true);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  // Poll live market ticker every 8 seconds
+  useEffect(() => {
+    const fetchTicker = () => {
+      fetch('/api/market/ticker')
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.price) {
+            setTickerData(data);
+          }
+        })
+        .catch(() => {});
+    };
+
+    fetchTicker();
+    const interval = setInterval(fetchTicker, 8000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Active section scroll spy
+  useEffect(() => {
+    if (currentRoute !== 'public') return;
+
+    const sections = ['hero', 'results', 'plans', 'why-us', 'live-chart', 'founder', 'faq'];
+
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 200;
+      for (const sectionId of sections) {
+        const el = document.getElementById(sectionId);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPosition >= top && scrollPosition < top + height) {
+            setActiveSection(sectionId);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [currentRoute]);
+
+  // Route Navigation Handlers
+  const navigateToAdmin = () => {
+    setCurrentRoute('admin');
+    window.history.pushState(null, '', '#admin');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const navigateToPublic = () => {
+    setCurrentRoute('public');
+    window.history.pushState(null, '', '/');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenApplication = (tier?: string) => {
+    if (tier) setSelectedPlanTier(tier);
+    setIsApplicationModalOpen(true);
+  };
+
+  // Render Admin View if on /admin
+  if (currentRoute === 'admin') {
+    if (isAdminAuthenticated) {
+      return (
+        <AdminDashboard
+          initialContent={content}
+          onContentUpdated={(updated) => setContent(updated)}
+          onExitAdmin={navigateToPublic}
+        />
+      );
+    }
+    return (
+      <AdminLogin
+        onLoginSuccess={() => setIsAdminAuthenticated(true)}
+        onReturnToSite={navigateToPublic}
+      />
+    );
+  }
+
+  // Render Public Website
+  return (
+    <div className="min-h-screen bg-[#123D32] text-[#D6F0E5] selection:bg-[#F2D231]/30 selection:text-white relative font-sans">
+      {/* 1. Preloader / Entry Experience */}
+      {!preloaderDone && (
+        <Preloader
+          brandName={content.siteConfig.brandName}
+          onComplete={() => setPreloaderDone(true)}
+        />
+      )}
+
+      {/* 2. Sticky Navigation */}
+      <Navbar
+        brandName={content.siteConfig.brandName}
+        logoText={content.siteConfig.logoText}
+        primaryCtaText={content.navigation.primaryCtaText}
+        primaryCtaLink={content.navigation.primaryCtaLink}
+        links={content.navigation.links}
+        activeSection={activeSection}
+        tickerData={tickerData}
+        onOpenApplication={handleOpenApplication}
+        onNavigateAdmin={navigateToAdmin}
+      />
+
+      {/* 3. Hero Section with Live Terminal Visual & Stats */}
+      <Hero
+        heroData={content.hero}
+        tickerData={tickerData}
+        onOpenApplication={handleOpenApplication}
+      />
+
+      {/* 4. Results / Performance Section with Top 3 Ranking & Table */}
+      <PerformanceSection
+        performanceData={content.performance}
+      />
+
+      {/* 5. Membership Plans with 3 Tiers (Monthly, Yearly, Lifetime) */}
+      <MembershipPlans
+        plansData={content.plans}
+        onSelectPlan={(planName) => handleOpenApplication(planName)}
+      />
+
+      {/* 6. Why Choose Us (The Difference) */}
+      <WhyUsSection
+        whyUsData={content.whyUs}
+        onOpenApplication={handleOpenApplication}
+      />
+
+      {/* 7. Live Market Section (Candlestick / Line terminal) */}
+      <LiveMarketSection
+        liveChartData={content.liveChart}
+        tickerData={tickerData}
+        onRefreshTicker={() => {
+          fetch('/api/market/ticker')
+            .then(res => res.json())
+            .then(data => data && setTickerData(data));
+        }}
+      />
+
+      {/* 8. Founder & Trust Narrative (Faaiz Durrani) */}
+      <FounderSection
+        founderData={content.founder}
+      />
+
+      {/* 9. FAQ Section */}
+      <FAQSection
+        faqData={content.faq}
+      />
+
+      {/* 10. Final Call to Action & Global Footer */}
+      <Footer
+        footerData={content.footer}
+        ctaData={content.ctaSection}
+        brandName={content.siteConfig.brandName}
+        onOpenApplication={() => handleOpenApplication('Yearly VIP')}
+        onNavigateAdmin={navigateToAdmin}
+      />
+
+      {/* Cohort Application / Contact Modal */}
+      <ApplicationModal
+        isOpen={isApplicationModalOpen}
+        onClose={() => setIsApplicationModalOpen(false)}
+        selectedTier={selectedPlanTier}
+        brandName={content.siteConfig.brandName}
+      />
+
+      {/* Discreet floating admin key pill (bottom right edge) */}
+      <aside aria-label="Portal administration access" className="fixed bottom-4 right-4 z-30">
+        <button
+          id="floating-admin-btn"
+          onClick={navigateToAdmin}
+          className="group flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-[#194C3D]/90 hover:bg-[#1E5747] border border-[#F2D231]/30 hover:border-[#F2D231] text-[10px] font-spacemono text-[#BFE5D5] hover:text-[#F2D231] backdrop-blur-md transition-all duration-200 shadow-lg cursor-pointer"
+          title="Open Admin Management Portal"
+          aria-label="Admin login"
+        >
+          <Lock className="w-3 h-3 text-[#F2D231] group-hover:scale-110 transition-transform" />
+          <span className="hidden group-hover:inline transition-opacity duration-200">
+            Admin Portal
+          </span>
+        </button>
+      </aside>
+    </div>
+  );
+}
